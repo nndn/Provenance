@@ -99,7 +99,7 @@ twine upload dist/*
 
 No external dependencies. Python 3.9+. Everything is plain text — grep always works.
 
-**Repo structure (for contributors):** CLI source lives in `src/prov.py`. This repo's own spec (meta) is in `specs/`. After install, user projects get `prov/prov.py` (copied from `src/prov.py`) and use `prov/` for their spec files. To run the CLI from this repo: `SPEC_DIR=specs python src/prov.py <command>`.
+**Repo structure (for contributors):** CLI source lives in `src/prov.py`. This repo's own spec (meta) is in `specs/`. After install, user projects get `prov/prov.py` (copied from `src/prov.py`) and use `prov/` for their spec files. To run the CLI from this repo: `SPEC_DIR=specs python src/prov.py <command>`. For local dev with pipx: `sh scripts/install-pipx-local.sh` — installs current build into pipx so `prov` uses your edits.
 
 ---
 

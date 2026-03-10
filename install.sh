@@ -42,8 +42,8 @@ else
   echo "  sh /tmp/provenance/install.sh [target-dir]"
   exit 1
 fi
-if [ -f "$SELF_DIR/prompts/spec-agent.md" ]; then
-  SOURCE_AGENT_MD="$SELF_DIR/prompts/spec-agent.md"
+if [ -f "$SELF_DIR/src/prov/prompts/spec-agent.md" ]; then
+  SOURCE_AGENT_MD="$SELF_DIR/src/prov/prompts/spec-agent.md"
 else
   SOURCE_AGENT_MD="$SELF_DIR/agent.md"
 fi
@@ -95,7 +95,7 @@ if [ "$INSTALL_AGENT" -eq 1 ]; then
     echo "  agent.md            already exists (--force to overwrite)"
   else
     cp "$SOURCE_AGENT_MD" "$DEST_AGENT"
-    echo "  agent.md            installed  (source: prompts/spec-agent.md)"
+    echo "  agent.md            installed  (source: src/prov/prompts/spec-agent.md)"
   fi
 fi
 
@@ -124,7 +124,7 @@ echo "       Claude:     cp agent.md CLAUDE.md"
 echo "       Gemini:     cp agent.md .gemini/GEMINI.md"
 echo "       Any agent:  append agent.md to your AGENTS.md"
 echo ""
-echo "     The canonical source lives at prompts/spec-agent.md in the Provenance repo."
+echo "     The canonical source lives at src/prov/prompts/spec-agent.md in the Provenance repo."
 echo ""
 echo "  3. Run the CLI"
 echo "       $PY prov/prov.py orient"

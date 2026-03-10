@@ -31,10 +31,10 @@ def get_spec_dir(entry_dir: Path | None = None) -> Path:
         return Path(d).resolve()
     if entry_dir is not None:
         resolved = entry_dir.resolve() if not entry_dir.is_absolute() else entry_dir
-        # If entry_dir looks like a spec dir (prov/, spec/, specs/ with spec files), use it
-        if (resolved / "CONTEXT.md").exists() or any(resolved.glob("*.md")):
+        # Only treat resolved as spec dir if it contains CONTEXT.md (definitive indicator)
+        if (resolved / "CONTEXT.md").exists():
             return resolved
-        # When running as installed global CLI, entry_dir is bin/ — search from cwd
+        # Otherwise search from cwd for prov/, spec/, or specs/
         found = _find_spec_dir_from_cwd()
         if found is not None:
             return found

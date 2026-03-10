@@ -47,6 +47,21 @@ publish-pypi-manual: Manual publish: `python -m build` then `twine upload dist/*
 
 > "Fallback when not using GitHub releases."
 
+dev-run-from-repo: Contributors run prov from this repo by setting SPEC_DIR=specs and running `python src/prov.py <command>`, or by using install-pipx-local then `prov`.
+
+> "Run from repo root; spec dir is specs/. Documented for contributors."
+> ~ README.md
+
+install-pipx-local: Contributors can install the current local build into pipx via `sh scripts/install-pipx-local.sh` (from repo root) so `prov` uses their edits without publishing.
+
+> "Local dev: test CLI changes without publishing to PyPI."
+> ~ scripts/install-pipx-local.sh
+
+pre-commit-spec-validate: Projects can install a pre-commit hook via `scripts/install-spec-pre-commit.sh` that runs prov validate when files under prov/, spec/, or specs/ change; prevents committing with invalid spec.
+
+> "Validate on commit so spec and code stay consistent."
+> ~ scripts/install-spec-pre-commit.sh
+
 ## Out of scope
 
 Custom installers (msi, deb, rpm). Homebrew formula. Chocolatey. These can be community-maintained.
@@ -57,3 +72,5 @@ Custom installers (msi, deb, rpm). Homebrew formula. Chocolatey. These can be co
 ~ pyproject.toml
 ~ install.sh
 ~ .github/workflows/publish-pypi.yml
+~ scripts/install-pipx-local.sh
+~ scripts/install-spec-pre-commit.sh

@@ -1,4 +1,5 @@
 #!/bin/sh
+# spec: pre-commit-spec-validate
 # Install Provenance (prov) pre-commit hook.
 #
 # Validates spec files when prov/, spec/, or specs/ change.

@@ -89,6 +89,10 @@ def grep_spec_in_code(
         ".venv",
         "venv",
         "prompts",
+        "egg-info",
+        "dist",
+        "build",
+        ".cursor",
     }
 
     if path_or_dir.is_file():
@@ -100,7 +104,9 @@ def grep_spec_in_code(
                 continue
             if f.suffix.lower() == ".md":
                 continue
-            if any(part in _skip_dirs for part in f.parts):
+            if any(
+                part in _skip_dirs or part.endswith(".egg-info") for part in f.parts
+            ):
                 continue
             files.append(f)
 

@@ -29,7 +29,7 @@ C:no-direct-cache-write: The agent never writes to .spec/ directly; the cache is
 change-flow: Every user request is handled in six ordered phases — understand (read spec and code), clarify (ask blocking questions, assume non-blocking with ! lines), propose (tell the user what will change and confirm before writing anything), write spec (edit domain files, validate, diff), implement (code with spec: backlinks), sync (prov sync, apply drift fixes, validate, diff, commit); phases must not be skipped or reordered.
 
 > "Whenever a user asks for any new change, first we should be looking at this current spec, then looking at the references in the code if needed, and coming up with QA if necessary. First suggest an update to the spec, and the agent should tell how the system will change, what flows will change. Once the agent confirms the changes, the specs are updated and the code is updated subsequently."
-  ~ prompts/spec-agent.md
+  ~ src/prov/prompts/spec-agent.md
 
 spec-backlink: Every function, class, or logical block that implements a spec entry carries a spec: comment at the top of the block; language-agnostic; one comment per block; multiple slugs comma-separated; slugs only, no description or file paths.
 
