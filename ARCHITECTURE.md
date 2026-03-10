@@ -1,4 +1,4 @@
-# Spec-Driven Development — Architecture
+# Provenance — Architecture
 
 > The complete technical specification for the spec system.
 > This document is the source of truth for anyone building,
@@ -144,13 +144,13 @@ graph later by implementing the same interface.
 
 ## 4. Repository layout
 
-**Spec-kit source repo** (this repository):
+**Provenance source repo** (this repository):
 
 ```
 <repo-root>/
   src/
-    spec.py             ← CLI source (installed into user projects as spec/spec.py)
-  specs/                ← this repo's own spec (meta: spec-kit documenting itself)
+    prov.py             ← CLI source (installed into user projects as prov/prov.py)
+  specs/                ← this repo's own spec (meta: Provenance documenting itself)
     CONTEXT.md
     <domain>.md
     .spec/
@@ -161,19 +161,19 @@ graph later by implementing the same interface.
 
 ```
 <repo-root>/
-  spec/                 ← or specs/; installer creates spec/ by default
-    spec.py             ← copied from src/spec.py
+  prov/                 ← installer creates prov/ by default
+    prov.py             ← copied from src/prov.py
     CONTEXT.md
     <domain>.md
     .spec/
 ```
 
-**spec.py is self-contained.** It requires only Python 3.9+ standard library.
+**prov.py is self-contained.** It requires only Python 3.9+ standard library.
 No external dependencies. Any agent or developer can run it without setup.
 It is the only file that needs to be copied when bootstrapping a new project.
 
-**`.spec/` is committed.** The cache is part of the repository so that `spec scope`
-and `spec impact` resolve instantly from the index without a build step.
+**`.spec/` is committed.** The cache is part of the repository so that `prov scope`
+and `prov impact` resolve instantly from the index without a build step.
 Its diff in pull requests is machine-readable evidence of what the spec changed.
 
 ---

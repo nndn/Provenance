@@ -8,11 +8,11 @@
 
 ## What the spec is
 
-`spec/` contains a living requirements index. At any moment it answers: what
+`prov/` contains a living requirements index. At any moment it answers: what
 does this system do, and why? It is not a changelog or design journal. It is
 the current, complete snapshot of user intent.
 
-The markdown files in `spec/` are always the source of truth. Any tool,
+The markdown files in `prov/` are always the source of truth. Any tool,
 cache, or index is built from those files and can be regenerated at any time.
 An agent or developer can always grep the files directly — no tooling required.
 
@@ -27,7 +27,7 @@ These apply in every session, without exception.
 
 **1. Read before write.**
 Never modify code or spec without first understanding what governs what you are
-about to touch. Use `spec scope` or grep. No exceptions.
+about to touch. Use `prov scope` or grep. No exceptions.
 
 **2. Every gap you fill gets a `!` line.**
 Any specific value, threshold, choice, or behavior you decide on the user's behalf
@@ -56,7 +56,7 @@ directly creates a cache that does not reflect the files. The pre-commit hook
 manages it. You never touch it.
 
 **7. Validate before every commit.**
-Run `python spec/spec.py validate` before committing. Fix all errors. Zero errors
+Run `python prov/prov.py validate` before committing. Fix all errors. Zero errors
 is the only acceptable state to commit.
 
 **8. Spec before code. Always.**
@@ -106,7 +106,7 @@ Q:slug:    question    — unresolved decision that blocks implementation
 
 ```bash
 # Check slug availability — always do this first
-python spec/spec.py check-slug <proposed-slug>
+python prov/prov.py check-slug <proposed-slug>
 # or manually:
 grep -r "^<proposed-slug>:" spec/
 ```
@@ -255,11 +255,11 @@ Never skip a phase. Never swap the order.
 Before touching anything, read the spec:
 
 ```bash
-python spec/spec.py orient              # full surface: domains, questions, backlog
-python spec/spec.py find <keywords>     # check if related entries already exist
-python spec/spec.py scope <path>        # if you know which files are affected
-python spec/spec.py context <slug>      # full details on each affected entry
-python spec/spec.py impact <slug>       # blast radius before changing anything
+python prov/prov.py orient              # full surface: domains, questions, backlog
+python prov/prov.py find <keywords>     # check if related entries already exist
+python prov/prov.py scope <path>        # if you know which files are affected
+python prov/prov.py context <slug>      # full details on each affected entry
+python prov/prov.py impact <slug>       # blast radius before changing anything
 ```
 
 If you need to understand the current behavior from code, read the code referenced
@@ -339,10 +339,10 @@ something, return to Phase 2 and revise.
 After the user confirms the proposal:
 
 ```bash
-python spec/spec.py check-slug <slug>   # before each new entry — verify availability
+python prov/prov.py check-slug <slug>   # before each new entry — verify availability
 # Edit the spec domain .md file(s) directly
-python spec/spec.py validate            # must pass with zero errors before continuing
-python spec/spec.py diff                # show the user what changed
+python prov/prov.py validate            # must pass with zero errors before continuing
+python prov/prov.py diff                # show the user what changed
 ```
 
 Rules:
@@ -362,7 +362,7 @@ moving to implementation.
 Now write the code:
 
 ```bash
-python spec/spec.py scope <file>        # confirm what governs the code you are about to write
+python prov/prov.py scope <file>        # confirm what governs the code you are about to write
 ```
 
 - Implement exactly what the spec now says. No extras.
@@ -378,7 +378,7 @@ After implementation, catch any drift between what the spec says and what the
 code actually does:
 
 ```bash
-python spec/spec.py sync <path>         # read the full drift report
+python prov/prov.py sync <path>         # read the full drift report
 ```
 
 The sync report will show:
@@ -390,17 +390,17 @@ The sync report will show:
 For each item, apply the appropriate fix:
 
 ```bash
-python spec/spec.py sync mark-implemented <slug>              # [planned] → implemented
-python spec/spec.py sync remove-ref <slug> <ref>              # remove dead ~ ref
-python spec/spec.py sync update-ref <slug> <old> <new>        # update moved ~ ref
-python spec/spec.py sync remove-backlink <file> <line> <slug> # remove phantom spec: comment
+python prov/prov.py sync mark-implemented <slug>              # [planned] → implemented
+python prov/prov.py sync remove-ref <slug> <ref>              # remove dead ~ ref
+python prov/prov.py sync update-ref <slug> <old> <new>        # update moved ~ ref
+python prov/prov.py sync remove-backlink <file> <line> <slug> # remove phantom spec: comment
 ```
 
 Then close the session:
 
 ```bash
-python spec/spec.py validate            # zero errors required
-python spec/spec.py diff                # final review — show the user what changed
+python prov/prov.py validate            # zero errors required
+python prov/prov.py diff                # final review — show the user what changed
 # Commit: spec + code together
 # Message: feat(<domain>): <description>
 #          spec: implement <slug>, add <slug>
@@ -413,8 +413,8 @@ python spec/spec.py diff                # final review — show the user what ch
 Debugging follows the same flow but starts from Phase 1 scoped to the bug:
 
 ```bash
-python spec/spec.py scope <file-with-bug>   # what should this file do?
-python spec/spec.py context <slug>          # full requirement details
+python prov/prov.py scope <file-with-bug>   # what should this file do?
+python prov/prov.py context <slug>          # full requirement details
 ```
 
 Determine root cause:
@@ -434,14 +434,14 @@ When code and spec have drifted without going through the normal flow (e.g.
 after a bulk refactor or after importing existing code):
 
 ```bash
-python spec/spec.py sync src/           # full drift report
+python prov/prov.py sync src/           # full drift report
 ```
 
 For each item in the report, present it to the user with context. Never apply
 a fix without explicit user confirmation. Apply confirmed fixes with the sync
 patch sub-commands above, then validate → diff → commit.
 
-For a read-only drift report: `python spec/spec.py reconcile src/`
+For a read-only drift report: `python prov/prov.py reconcile src/`
 
 ---
 
@@ -449,27 +449,27 @@ For a read-only drift report: `python spec/spec.py reconcile src/`
 
 ```bash
 # Session start
-python spec/spec.py orient              # full surface: domains, questions, backlog
+python prov/prov.py orient              # full surface: domains, questions, backlog
 
 # Coding entry point
-python spec/spec.py scope <path>        # what governs this file or directory?
-python spec/spec.py context <slug>      # full entry context
-python spec/spec.py impact <slug>       # blast radius before changing anything
+python prov/prov.py scope <path>        # what governs this file or directory?
+python prov/prov.py context <slug>      # full entry context
+python prov/prov.py impact <slug>       # blast radius before changing anything
 
 # Discovery
-python spec/spec.py find <keywords>     # when you don't know the slug
-python spec/spec.py domain <name>       # full domain load
+python prov/prov.py find <keywords>     # when you don't know the slug
+python prov/prov.py domain <name>       # full domain load
 
 # Writing
-python spec/spec.py check-slug <slug>   # is this slug available?
-python spec/spec.py write               # guided authoring with pre-write validation
+python prov/prov.py check-slug <slug>   # is this slug available?
+python prov/prov.py write               # guided authoring with pre-write validation
 
 # Integrity
-python spec/spec.py validate            # run before every commit
-python spec/spec.py diff [ref]          # semantic change manifest for human review
-python spec/spec.py reconcile <path>    # detect code↔spec drift (read-only report)
-python spec/spec.py sync [path]         # interactive drift resolution (fix drift in-place)
-python spec/spec.py rebuild             # rebuild cache from files
+python prov/prov.py validate            # run before every commit
+python prov/prov.py diff [ref]          # semantic change manifest for human review
+python prov/prov.py reconcile <path>    # detect code↔spec drift (read-only report)
+python prov/prov.py sync [path]         # interactive drift resolution (fix drift in-place)
+python prov/prov.py rebuild             # rebuild cache from files
 ```
 
 ---
@@ -599,7 +599,7 @@ spec: implement session-expiry, add ! assumption for 30-day value
 
 ## Fallback: when spec.py is unavailable
 
-If `spec/spec.py` is absent or broken, fall back to pure grep. The spec is
+If `prov/prov.py` is absent or broken, fall back to pure grep. The spec is
 always readable without any tooling:
 
 ```bash

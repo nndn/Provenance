@@ -1,8 +1,8 @@
-# spec
+# Provenance
 
 > Living requirements index + CLI for spec-driven development. Works with any AI agent.
 
-`spec` keeps your requirements in plain markdown next to your code, gives you a CLI to query them, and teaches your AI agent to read before it writes.
+**Provenance** (prov) keeps your requirements in plain markdown next to your code, gives you a CLI to query them, and teaches your AI agent to read before it writes.
 
 ---
 
@@ -10,13 +10,13 @@
 
 | File | Purpose |
 |---|---|
-| `spec/spec.py` | CLI — scope, context, impact, validate, diff, write, reconcile |
+| `prov/prov.py` | CLI — scope, context, impact, validate, diff, write, reconcile |
 | `agent.md` | Agent rules — drop into Cursor, Claude, or any agent config |
 | `scripts/install-spec-pre-commit.sh` | Git hook — validates spec on every commit |
 
 No external dependencies. Python 3.9+. Everything is plain text — grep always works.
 
-**Repo structure (for contributors):** CLI source lives in `src/spec.py`. This repo's own spec (meta) is in `specs/`. After install, user projects get `spec/spec.py` (copied from `src/spec.py`) and use `spec/` for their spec files. To run the CLI from this repo: `SPEC_DIR=specs python src/spec.py <command>`.
+**Repo structure (for contributors):** CLI source lives in `src/prov.py`. This repo's own spec (meta) is in `specs/`. After install, user projects get `prov/prov.py` (copied from `src/prov.py`) and use `prov/` for their spec files. To run the CLI from this repo: `SPEC_DIR=specs python src/prov.py <command>`.
 
 ---
 
@@ -24,23 +24,23 @@ No external dependencies. Python 3.9+. Everything is plain text — grep always 
 
 ```sh
 # 1. Clone
-git clone <this-repo-url> /tmp/spec-kit
+git clone <this-repo-url> /tmp/provenance
 
 # 2. Install into your project
 cd /path/to/your-project
-sh /tmp/spec-kit/install.sh
+sh /tmp/provenance/install.sh
 
-# 3. Edit spec/CONTEXT.md, then orient
-python spec/spec.py orient
+# 3. Edit prov/CONTEXT.md, then orient
+python prov/prov.py orient
 ```
 
 After install:
 
 ```
 your-project/
-  spec/
+  prov/
     CONTEXT.md    ← edit this: project name, purpose, domain map
-    spec.py       ← the CLI
+    prov.py       ← the CLI
   agent.md        ← copy to your AI agent config
 ```
 
@@ -52,36 +52,36 @@ Copy `agent.md` to wherever your agent reads rules:
 
 | Agent | Location |
 |---|---|
-| Cursor | `.cursorrules` or `.cursor/rules/spec.md` |
+| Cursor | `.cursorrules` or `.cursor/rules/prov.md` |
 | Claude Code | `CLAUDE.md` |
 | Codex / GPT | `AGENTS.md` |
 | Any | append to your existing rules file |
 
-Once the agent reads `agent.md`, it will automatically call `spec scope` before touching code, `spec validate` before committing, and `spec diff` for human review.
+Once the agent reads `agent.md`, it will automatically call `prov scope` before touching code, `prov validate` before committing, and `prov diff` for human review.
 
 ---
 
 ## CLI
 
 ```sh
-python spec/spec.py orient              # start every session here
+python prov/prov.py orient              # start every session here
 
-python spec/spec.py scope <path>        # what governs this file or directory?
-python spec/spec.py context <slug>      # full entry: statement, provenance, deps, code refs
-python spec/spec.py impact <slug>       # blast radius before changing anything
+python prov/prov.py scope <path>        # what governs this file or directory?
+python prov/prov.py context <slug>      # full entry: statement, provenance, deps, code refs
+python prov/prov.py impact <slug>       # blast radius before changing anything
 
-python spec/spec.py find <keywords>     # search when you don't know the slug
-python spec/spec.py domain <name>       # load a full domain
+python prov/prov.py find <keywords>     # search when you don't know the slug
+python prov/prov.py domain <name>       # load a full domain
 
-python spec/spec.py check-slug <slug>   # is this slug available?
-python spec/spec.py write               # add entries (JSON input, validates before writing)
+python prov/prov.py check-slug <slug>   # is this slug available?
+python prov/prov.py write               # add entries (JSON input, validates before writing)
 
-python spec/spec.py validate            # run before every commit — zero errors only
-python spec/spec.py diff [ref]          # semantic change manifest vs HEAD or any ref
-python spec/spec.py reconcile <path>    # detect code↔spec drift
-python spec/spec.py rebuild             # rebuild .spec/ cache from files
+python prov/prov.py validate            # run before every commit — zero errors only
+python prov/prov.py diff [ref]          # semantic change manifest vs HEAD or any ref
+python prov/prov.py reconcile <path>    # detect code↔spec drift
+python prov/prov.py rebuild             # rebuild .spec/ cache from files
 
-python spec/spec.py init                # scaffold CONTEXT.md in a new project
+python prov/prov.py init                # scaffold CONTEXT.md in a new project
 ```
 
 ---
@@ -178,7 +178,7 @@ class PlanLimitMiddleware: ...
 async function revokeSession(userId: string): Promise<void>
 ```
 
-`spec validate` checks that every `spec:` slug in code has a matching entry. `spec reconcile` surfaces drift when code and spec get out of sync.
+`prov validate` checks that every `spec:` slug in code has a matching entry. `prov reconcile` surfaces drift when code and spec get out of sync.
 
 ---
 
@@ -189,20 +189,20 @@ async function revokeSession(userId: string): Promise<void>
 ```
 
 When spec files are staged, the hook:
-1. Runs `spec validate` — blocks commit on any error
-2. Runs `spec rebuild` — regenerates `.spec/` cache
+1. Runs `prov validate` — blocks commit on any error
+2. Runs `prov rebuild` — regenerates `.spec/` cache
 3. Stages `.spec/` automatically
 
 ---
 
 ## Adding a new domain
 
-1. Create `spec/<domain>.md` with the standard structure (see above)
-2. Add it to the `## Domain map` in `spec/CONTEXT.md`:
+1. Create `prov/<domain>.md` with the standard structure (see above)
+2. Add it to the `## Domain map` in `prov/CONTEXT.md`:
    ```
-   auth  spec/auth.md
+   auth  prov/auth.md
    ```
-3. Run `python spec/spec.py orient` to verify it loads
+3. Run `python prov/prov.py orient` to verify it loads
 
 ---
 
@@ -220,12 +220,12 @@ echo '{
     "provenance": "\"I need a forgot password flow\"",
     "planned": true
   }]
-}' | python spec/spec.py write --yes
+}' | python prov/prov.py write --yes
 ```
 
 ### Directly in markdown
 
-Edit the domain file. Follow the format above. Run `python spec/spec.py validate` when done.
+Edit the domain file. Follow the format above. Run `python prov/prov.py validate` when done.
 
 ---
 
@@ -257,8 +257,8 @@ C:example: Non-negotiable rule.
 
 ## Domain map
 
-auth    spec/auth.md
-billing spec/billing.md
+auth    prov/auth.md
+billing prov/billing.md
 ```
 
 ---
@@ -267,13 +267,13 @@ billing spec/billing.md
 
 ```sh
 # Spec-only
-spec(auth): add session-expiry requirement
-spec(auth): implement admin-revoke, close Q:admin-scope
-spec: reconcile src/api/
+prov(auth): add session-expiry requirement
+prov(auth): implement admin-revoke, close Q:admin-scope
+prov: reconcile src/api/
 
 # Code + spec together (required)
 feat(auth): implement session expiry
-spec: implement session-expiry
+prov: implement session-expiry
 ```
 
 ---
@@ -299,11 +299,11 @@ All ERRORs must be zero before committing.
 The spec is always greppable without any tooling:
 
 ```sh
-grep -rh "^>" spec/*.md         # domain summaries
-grep -r "^Q:" spec/             # open questions
-grep -r "\[planned\]" spec/     # backlog
-grep -r "^  !" spec/            # unconfirmed assumptions
-grep -r "^C:" spec/             # all constraints
-grep -A 20 "^session-expiry:" spec/  # entry by slug
-grep -r "~src/api/auth" spec/   # what owns this path
+grep -rh "^>" prov/*.md         # domain summaries
+grep -r "^Q:" prov/             # open questions
+grep -r "\[planned\]" prov/     # backlog
+grep -r "^  !" prov/            # unconfirmed assumptions
+grep -r "^C:" prov/             # all constraints
+grep -A 20 "^session-expiry:" prov/  # entry by slug
+grep -r "~src/api/auth" prov/   # what owns this path
 ```

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Spec-driven development CLI. Python 3.9+ stdlib only.
-Run: python spec/spec.py <command> [args]
+Provenance CLI — spec-driven development. Python 3.9+ stdlib only.
+Run: python prov/prov.py <command> [args]
 """
 from __future__ import annotations
 
@@ -411,7 +411,7 @@ def cmd_orient(spec_dir: Path, repo_root: Path) -> None:
     for n in nodes:
         by_domain.setdefault(n.domain, []).append(n)
 
-    print("=== SPEC ORIENT ===")
+    print("=== PROV ORIENT ===")
     print()
     print(f"Project: {ctx.title}")
     print(ctx.purpose)
@@ -460,7 +460,7 @@ def cmd_orient(spec_dir: Path, repo_root: Path) -> None:
             print(f"  {n.slug:20} {n.domain:10} {(n.statement or '')[:50]}")
 
     print()
-    print("─── Next: spec domain <name> | spec context <slug> | spec validate")
+    print("─── Next: prov domain <name> | prov context <slug> | prov validate")
 
 
 def cmd_scope(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
@@ -472,7 +472,7 @@ def cmd_scope(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
     if not slugs:
         print(f"=== SCOPE: {path_arg} ===")
         print("No spec entries reference this path.")
-        print("Run: spec reconcile <path>  to check for drift.")
+        print("Run: prov reconcile <path>  to check for drift.")
         return
 
     reqs = [
@@ -524,8 +524,8 @@ def cmd_scope(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
         for n in q_nodes:
             print(f"  {n.slug}  {n.statement[:60]}")
     print()
-    print("─── spec context <slug>    for full entry details")
-    print("─── spec impact <slug>     before making changes")
+    print("─── prov context <slug>    for full entry details")
+    print("─── prov impact <slug>     before making changes")
 
 
 def cmd_context(spec_dir: Path, repo_root: Path, slug: str) -> None:
@@ -591,9 +591,9 @@ def cmd_context(spec_dir: Path, repo_root: Path, slug: str) -> None:
         for b in blocked:
             print(f"  {b.slug}    {b.statement[:60]}")
     print()
-    print("─── spec impact <slug>           before making changes")
-    print("─── spec context <dep-slug>      explore a dependency")
-    print("─── spec domain <domain>         load full domain context")
+    print("─── prov impact <slug>           before making changes")
+    print("─── prov context <dep-slug>      explore a dependency")
+    print("─── prov domain <domain>         load full domain context")
 
 
 def cmd_impact(spec_dir: Path, repo_root: Path, slug: str) -> None:
@@ -678,13 +678,13 @@ def cmd_find(spec_dir: Path, keywords: str) -> None:
     print()
     if not matches:
         print("No entries match.")
-        print("Try: spec orient    to browse all domains.")
+        print("Try: prov orient    to browse all domains.")
         return
     for _, n in matches[:20]:
         print(f"{n.slug}    [{n.domain}]    {n.type}    {n.statement[:60]}")
     print()
     print(f"{len(matches)} results.")
-    print("─── spec context <slug>    for full details")
+    print("─── prov context <slug>    for full details")
 
 
 def cmd_domain(spec_dir: Path, name: str) -> None:
@@ -815,7 +815,7 @@ def cmd_validate(spec_dir: Path, repo_root: Path) -> int:
     )
     clean = [c for c in clean if c]
 
-    print("=== SPEC VALIDATE ===")
+    print("=== PROV VALIDATE ===")
     print()
     if errors:
         print("ERRORS (fix before commit):")
@@ -908,14 +908,14 @@ def cmd_reconcile(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
         for n, f, l in silent[:10]:
             print(f"  {n.slug}    [planned]  but spec:{n.slug} found in {f}:{l}")
         print(
-            "  → Mark these entries as implemented: spec write --implement <slug> <path>"
+            "  → Mark these entries as implemented: prov write --implement <slug> <path>"
         )
         print()
     if dead:
         print("SPEC ~ REFS POINTING TO MOVED/DELETED CODE:")
         for n, ref in dead[:10]:
             print(f"  {n.slug}    ~ {ref}  — not found")
-        print("  → Update refs: spec write --update-ref <slug> <new-path>")
+        print("  → Update refs: prov write --update-ref <slug> <new-path>")
         print()
     if not phantom and not silent and not dead:
         print("CLEAN:")
@@ -1041,17 +1041,17 @@ def _remove_spec_backlink_from_code(
 
 
 def cmd_sync(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
-    """spec sync [path] — drift report for agent-driven resolution.
+    """prov sync [path] — drift report for agent-driven resolution.
 
     # spec: spec-sync
     Outputs structured plain text listing all three drift types so an agent
     can read it, discuss each item with the user, and apply fixes directly.
 
     Patch sub-commands (called by the agent after user confirms):
-      spec sync mark-implemented <slug>   remove [planned], add ~ refs from code
-      spec sync remove-ref <slug> <ref>   remove a dead ~ ref
-      spec sync update-ref <slug> <old> <new>  replace a ~ ref
-      spec sync remove-backlink <file> <line> <slug>  remove spec: comment from code
+      prov sync mark-implemented <slug>   remove [planned], add ~ refs from code
+      prov sync remove-ref <slug> <ref>   remove a dead ~ ref
+      prov sync update-ref <slug> <old> <new>  replace a ~ ref
+      prov sync remove-backlink <file> <line> <slug>  remove spec: comment from code
     """
     # Dispatch patch sub-commands
     if args and args[0] in (
@@ -1103,7 +1103,7 @@ def cmd_sync(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     ]
 
     total = len(phantom) + len(silent) + len(dead)
-    print("=== SPEC SYNC ===")
+    print("=== PROV SYNC ===")
     print()
 
     if total == 0:
@@ -1126,7 +1126,7 @@ def cmd_sync(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
         print()
         print(f"SILENT IMPLEMENTATIONS ({len(silent)}):")
         print("  Spec says [planned] but the code already implements these.")
-        print("  Agent: confirm with user, then run: spec sync mark-implemented <slug>")
+        print("  Agent: confirm with user, then run: prov sync mark-implemented <slug>")
         print()
         for n, code_files in silent:
             print(f"  {n.slug}  [{n.domain}]  {n.file}")
@@ -1141,7 +1141,7 @@ def cmd_sync(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
         print(f"PHANTOM SLUGS ({len(phantom)}):")
         print("  Code references a spec: slug that has no spec entry.")
         print("  Agent: ask user — create the entry or remove the backlink?")
-        print("  To remove backlink: spec sync remove-backlink <file> <line> <slug>")
+        print("  To remove backlink: prov sync remove-backlink <file> <line> <slug>")
         print()
         for fpath, lno, slug in phantom:
             print(f"  {slug}  {fpath}:{lno}")
@@ -1151,15 +1151,15 @@ def cmd_sync(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
         print(f"DEAD REFS ({len(dead)}):")
         print("  Spec entries reference code paths that no longer exist.")
         print("  Agent: ask user — remove or update each ref?")
-        print("  To remove: spec sync remove-ref <slug> <ref>")
-        print("  To update: spec sync update-ref <slug> <old-ref> <new-ref>")
+        print("  To remove: prov sync remove-ref <slug> <ref>")
+        print("  To update: prov sync update-ref <slug> <old-ref> <new-ref>")
         print()
         for n, ref in dead:
             print(f"  {n.slug}  [{n.domain}]  ~ {ref}")
 
     print()
     print("─── Agent: present each item to the user, confirm intent, then apply fixes.")
-    print("─── After all fixes: spec validate  →  spec diff  →  commit.")
+    print("─── After all fixes: prov validate  →  prov diff  →  commit.")
     return 0
 
 
@@ -1170,7 +1170,7 @@ def _cmd_sync_patch(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     if sub == "mark-implemented":
         # mark-implemented <slug>
         if len(args) < 2:
-            print("Usage: spec sync mark-implemented <slug>")
+            print("Usage: prov sync mark-implemented <slug>")
             return 1
         slug = args[1]
         nodes, _, _, _, _ = _load_backend(spec_dir)
@@ -1197,7 +1197,7 @@ def _cmd_sync_patch(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     if sub == "remove-ref":
         # remove-ref <slug> <ref>
         if len(args) < 3:
-            print("Usage: spec sync remove-ref <slug> <ref>")
+            print("Usage: prov sync remove-ref <slug> <ref>")
             return 1
         slug, ref = args[1], args[2]
         nodes, _, _, _, _ = _load_backend(spec_dir)
@@ -1216,7 +1216,7 @@ def _cmd_sync_patch(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     if sub == "update-ref":
         # update-ref <slug> <old-ref> <new-ref>
         if len(args) < 4:
-            print("Usage: spec sync update-ref <slug> <old-ref> <new-ref>")
+            print("Usage: prov sync update-ref <slug> <old-ref> <new-ref>")
             return 1
         slug, old_ref, new_ref = args[1], args[2], args[3]
         nodes, _, _, _, _ = _load_backend(spec_dir)
@@ -1233,7 +1233,7 @@ def _cmd_sync_patch(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     if sub == "remove-backlink":
         # remove-backlink <file> <line> <slug>
         if len(args) < 4:
-            print("Usage: spec sync remove-backlink <file> <line> <slug>")
+            print("Usage: prov sync remove-backlink <file> <line> <slug>")
             return 1
         fpath, line_str, slug = args[1], args[2], args[3]
         try:
@@ -1367,7 +1367,7 @@ def _insert_entry_into_file(path: Path, section_name: str, block: str) -> None:
 
 
 def cmd_write(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
-    """spec write — structured JSON input. Validates, shows would-write, --yes to write."""
+    """prov write — structured JSON input. Validates, shows would-write, --yes to write."""
     autonous = "--yes" in args or "-y" in args
     rest = [a for a in args if a not in ("--yes", "-y")]
 
@@ -1393,7 +1393,7 @@ def cmd_write(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     if not isinstance(entries_raw, list):
         entries_raw = [entries_raw]
     if not domain or not entries_raw:
-        print("=== SPEC WRITE ===")
+        print("=== PROV WRITE ===")
         print("Error: JSON must have 'domain' and 'entries' (array).")
         return 1
 
@@ -1401,7 +1401,7 @@ def cmd_write(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     nodes_by_slug = _nodes_by_slug(nodes)
 
     if domain not in file_by_domain:
-        print("=== SPEC WRITE ===")
+        print("=== PROV WRITE ===")
         print(
             f"Error: domain '{domain}' not found. Known: {', '.join(sorted(file_by_domain.keys()))}"
         )
@@ -1465,14 +1465,14 @@ def cmd_write(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
         )
 
     if errors:
-        print("=== SPEC WRITE ===")
+        print("=== PROV WRITE ===")
         print()
         print("VALIDATION ERRORS:")
         for err in errors:
             print(f"  {err}")
         return 1
 
-    print("=== SPEC WRITE ===")
+    print("=== PROV WRITE ===")
     print()
     print("WOULD WRITE:")
     for n in to_write:
@@ -1636,7 +1636,7 @@ def _parse_spec_file_from_text(
 
 
 def cmd_diff(spec_dir: Path, repo_root: Path, ref: str) -> None:
-    """spec diff [ref] — semantic change manifest vs ref (default HEAD)."""
+    """prov diff [ref] — semantic change manifest vs ref (default HEAD)."""
     nodes, _, _, _, _ = _load_backend(spec_dir)
     old_nodes = _load_nodes_from_ref(spec_dir, repo_root, ref)
     old_by = _nodes_by_slug(old_nodes)
@@ -1682,7 +1682,7 @@ def cmd_diff(spec_dir: Path, repo_root: Path, ref: str) -> None:
             if o.type == "question":
                 resolved_questions.append(slug)
 
-    print("=== SPEC DIFF ===")
+    print("=== PROV DIFF ===")
     print(f"vs {ref}")
     print()
     if implemented:
@@ -1767,7 +1767,7 @@ C:example: <Non-negotiable rule>
 
 ## Domain map
 
-<domain> spec/<domain>.md
+<domain> prov/<domain>.md
 """,
         encoding="utf-8",
     )
@@ -1779,7 +1779,7 @@ def main() -> int:
     repo_root = _repo_root()
     args = sys.argv[1:]
     if not args:
-        print("Usage: python spec/spec.py <command> [args]")
+        print("Usage: python prov/prov.py <command> [args]")
         print(
             "Commands: orient, scope <path>, context <slug>, impact <slug>, find <kw>, domain <name>,"
         )
@@ -1799,26 +1799,26 @@ def main() -> int:
         cmd_scope(spec_dir, repo_root, rest[0] if rest else ".")
     elif cmd == "context":
         if not rest:
-            print("Usage: spec context <slug>")
+            print("Usage: prov context <slug>")
             return 1
         cmd_context(spec_dir, repo_root, rest[0])
     elif cmd == "impact":
         if not rest:
-            print("Usage: spec impact <slug>")
+            print("Usage: prov impact <slug>")
             return 1
         cmd_impact(spec_dir, repo_root, rest[0])
     elif cmd == "find":
         cmd_find(spec_dir, " ".join(rest) if rest else "")
     elif cmd == "domain":
         if not rest:
-            print("Usage: spec domain <name>")
+            print("Usage: prov domain <name>")
             return 1
         cmd_domain(spec_dir, rest[0])
     elif cmd == "validate":
         return cmd_validate(spec_dir, repo_root)
     elif cmd == "check-slug":
         if not rest:
-            print("Usage: spec check-slug <slug>")
+            print("Usage: prov check-slug <slug>")
             return 1
         cmd_check_slug(spec_dir, rest[0])
     elif cmd == "reconcile":

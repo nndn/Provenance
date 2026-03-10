@@ -1,4 +1,4 @@
-# Spec-Driven Development
+# Provenance
 
 > A living requirements index maintained alongside the codebase; agents and developers use it to understand what the system does and why.
 
@@ -18,7 +18,7 @@ C:files-canonical: Markdown files in the spec directory are the spec — the act
 
 > "The markdown files in specs/ are the spec. Not a representation of the spec, not a serialization format."
 
-C:cli-stdlib-only: spec.py requires only Python 3.9+ standard library. No external dependencies.
+C:cli-stdlib-only: prov.py requires only Python 3.9+ standard library. No external dependencies.
 
 > "Any agent or developer can run it without setup."
 

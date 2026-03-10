@@ -27,7 +27,7 @@ file-backend: FileQueryBackend parses markdown files on every call; zero infrast
 > @ C:two-space-indent
 > [planned]
 
-json-cache-backend: JsonCacheBackend wraps FileQueryBackend; serializes graph to .spec/graph.json and code index to .spec/code-index.json; checks file mtimes and transparently rebuilds when stale. Powers spec scope (O(1) code-index), spec impact (graph traversal), spec orient (domain summaries).
+json-cache-backend: JsonCacheBackend wraps FileQueryBackend; serializes graph to .spec/graph.json and code index to .spec/code-index.json; checks file mtimes and transparently rebuilds when stale. Powers prov scope (O(1) code-index), prov impact (graph traversal), prov orient (domain summaries).
 
 > "JsonCacheBackend (phase 2, committed to repo). Serializes the parsed graph to .spec/graph.json and the code-path reverse index to .spec/code-index.json."
 > @ file-backend

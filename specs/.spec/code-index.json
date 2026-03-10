@@ -1,6 +1,17 @@
 {
-  "generated": "2026-03-10T08:10:34.315851Z",
-  "by_file": {},
+  "generated": "2026-03-10T10:03:31.857973Z",
+  "by_file": {
+    "src/prov.py": [
+      "spec-diff",
+      "spec-write",
+      "spec-sync",
+      "rebuild-command",
+      "sync-session-protocol"
+    ],
+    "prompts/spec-agent.md": [
+      "change-flow"
+    ]
+  },
   "by_dir": {
     "core": [],
     "format": [],
