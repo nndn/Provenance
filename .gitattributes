@@ -1,0 +1,19 @@
+# Normalize line endings to LF in repo; check out as-is on Windows
+* text=auto eol=lf
+
+# Explicitly declare text files
+*.md text
+*.py text
+*.sh text
+*.toml text
+*.yaml text
+*.yml text
+*.json text
+
+# Denote binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

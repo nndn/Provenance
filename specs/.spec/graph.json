@@ -1,0 +1,979 @@
+{
+  "generated": "2026-03-10T08:10:34.315851Z",
+  "spec_files": [
+    "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+    "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+    "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+    "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+    "/Users/nandan/Desktop/Dev/i1/spec/agent.md"
+  ],
+  "nodes": {
+    "C:no-history": {
+      "type": "constraint",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "The spec never records how things changed, what was considered, or what was rejected. Git records history; the spec records intent.",
+      "planned": false,
+      "provenance": "\"The spec is always current. A well-maintained spec is indistinguishable from one written in a single session.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:no-evolutionary-language": {
+      "type": "constraint",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "The spec never contains \"Previously this was...\", \"Changed from X to Y\", \"Deprecated\", or decision rationale prose. Declarative mutation only \u2014 rewrite in place, delete when removed.",
+      "planned": false,
+      "provenance": "\"No tombstones, no deprecated markers. The feature is gone; the spec reflects that.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "living-index": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "The spec is a living requirements index maintained alongside the codebase; it answers what the system does and why at any point in time.",
+      "planned": false,
+      "provenance": "\"The spec is a living requirements index maintained alongside the codebase.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "rebuilding-test": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "A fresh agent given only the spec and no prior context must be able to build a system that satisfies all user expectations; user-observable behavior would match.",
+      "planned": false,
+      "provenance": "\"Could a fresh agent, given only the spec and no prior context, build a system that satisfies all user expectations?\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "inclusion-test": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "Four questions govern what belongs in the spec: (1) user explicitly stated \u2192 in spec; (2) competent developer default \u2192 skip; (3) choice between reasonable options \u2192 in spec; (4) derivable from existing entries \u2192 do not duplicate.",
+      "planned": false,
+      "provenance": "\"The inclusion test \u2014 ask these four questions in order\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "property-graph": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "The spec is a property graph (literally): node types Requirements, Constraints, Questions, Domains; edge types depends-on, implements, blocked-by, belongs-to; computable from plain text.",
+      "planned": false,
+      "provenance": "\"The spec is a property graph. Not metaphorically \u2014 literally.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "single-hop-grep": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "Single-hop queries (find entry by slug, all entries of a type, direct dependents, code implementing an entry) are covered by grep; no tooling required.",
+      "planned": false,
+      "provenance": "\"Single-hop (grep covers these): Find entry by slug, find all entries of a type, find direct dependents, find what code implements an entry.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "multi-hop-cli": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/core.md",
+      "statement": "Multi-hop queries (blast radius, transitive dependency chains, domain coupling, blocked work, orphan detection) are covered by the CLI using an in-memory graph parsed from files.",
+      "planned": false,
+      "provenance": "\"Multi-hop (CLI covers these): Full blast radius of a change, transitive dependency chains, domain coupling analysis, blocked work analysis, orphan detection.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "property-graph"
+      ],
+      "blocked_by": []
+    },
+    "C:column-zero": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Every primary entry starts at column 0. Violating this breaks grep-based retrieval and the file parser.",
+      "planned": false,
+      "provenance": "\"Every primary entry starts at column 0\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:two-space-indent": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Every sub-line is indented exactly 2 spaces. Violating this breaks grep-based retrieval and the file parser.",
+      "planned": false,
+      "provenance": "\"Every sub-line is indented exactly 2 spaces\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:slug-unique": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Slugs are globally unique across the entire spec tree. Check with spec check-slug or grep before writing.",
+      "planned": false,
+      "provenance": "\"Slugs are globally unique across the entire specs/ tree\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:slug-permanent": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Once written and referenced in code, a slug does not change; the slug is a stable handle, not a description.",
+      "planned": false,
+      "provenance": "\"Slugs are permanent. Rename cost is high \u2014 choose carefully upfront.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "requirement-node": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Requirement entries use bare slug at column 0, statement, optional ; sub-lines > provenance, ! assumption, ~ code-ref, @ depends-on, ? blocked-by.",
+      "planned": true,
+      "provenance": "\"Requirements \u2014 observable behaviors the user expects. Use bare slug:.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "constraint-node": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Constraint entries use C:slug: prefix at column 0, statement; sub-lines > provenance, optional ! and ~; no ; referenced from requirements via @ C:slug.",
+      "planned": true,
+      "provenance": "\"Constraints \u2014 non-negotiable rules that govern all requirements in the domain. Use C:slug: prefix.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "question-node": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Open-question entries use Q:slug: prefix at column 0, question statement; sub-line > what this blocks; deleted when resolved.",
+      "planned": false,
+      "provenance": "\"Open Questions \u2014 unresolved decisions that block implementation. Use Q:slug: prefix. Always include a > line stating what they block.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "provenance-required": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Every node has a > line (provenance). An entry with no > line is a ghost-scope error.",
+      "planned": false,
+      "provenance": "\"> is required on every node. No exceptions. An entry with no > line is a ghost-scope error.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "assumption-disclosure": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Whenever the agent fills a gap (number, threshold, choice, unspecified behavior), a ! line is required. \"It seemed obvious\" is not an excuse.",
+      "planned": false,
+      "provenance": "\"! is required whenever the agent fills a gap. Any detail the agent decided on the user's behalf gets a ! line.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "code-ref-sublines": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Code refs use ~ on dedicated sub-lines (2-space indent), one per line; never inline in the entry statement.",
+      "planned": false,
+      "provenance": "\"~ moves to sub-lines. Never inline in the entry statement. Multiple code refs are now unambiguous.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "planned-marker": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Unimplemented requirements carry until implemented; then add ~ refs, remove , confirm or remove ! lines in one edit.",
+      "planned": true,
+      "provenance": "\"[planned] marks unimplemented requirements. When a requirement is implemented: add ~ ref sub-lines, remove [planned], confirm or remove ! lines. One edit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "slug-format": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Slugs are kebab-case, 2\u20134 words, describing the behavior not the domain. A developer reading only spec: slug in code should understand the constraint without loading the spec.",
+      "planned": false,
+      "provenance": "\"Format: kebab-case, 2\u20134 words, describing the behavior not the domain. The behavior test.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "C:slug-unique",
+        "C:slug-permanent"
+      ],
+      "blocked_by": []
+    },
+    "domain-file": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Line 2 of every domain file is a > one-line summary (domain identity); appears in spec orient; write so an agent can decide whether to load the file.",
+      "planned": false,
+      "provenance": "\"Line 2 of every file is a > one-line summary. This is the domain's identity string.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "domain-split": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Split a domain into a folder when any of: more than 15 requirements in one file; a sub-domain has 5+ requirements; one section longer than rest combined; ## Refs lists 3+ distinct source subdirectories. After split: README.md as domain index, sub-domain .md files; slugs travel with content, zero reference updates.",
+      "planned": false,
+      "provenance": "\"Split thresholds \u2014 any one triggers a split. Slugs travel with content. IDs are never renumbered \u2014 slugs are the identity.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "context-file": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "CONTEXT.md contains project name, one-line summary, purpose, user goals, hard constraints, non-goals, domain map; no requirements; establishes context before loading any domain file.",
+      "planned": false,
+      "provenance": "\"CONTEXT.md contains no requirements. It establishes the context every agent session needs before loading any domain file.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "out-of-scope-section": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Each domain file has ## Out of scope as a short bullet list to kill incorrect assumptions before they form; constraint on imagination, not documentation.",
+      "planned": false,
+      "provenance": "\"## Out of scope \u2014 short bullet list. Its purpose is to kill incorrect assumptions before they form.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "refs-section": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/format.md",
+      "statement": "Each domain file has ## Refs listing primary code paths the domain owns; agents use it for impact analysis without scanning every inline ~.",
+      "planned": false,
+      "provenance": "\"## Refs \u2014 the primary code paths this domain owns. An agent doing impact analysis reads this section.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:backend-readonly": {
+      "type": "constraint",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "Query backends are read-only. They have no mutation methods; they never write to any file. Rebuild from files at any time.",
+      "planned": false,
+      "provenance": "\"SpecQueryBackend \u2014 reads from files or an index, answers read-only queries, never modifies files.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "data-model": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "The in-memory model includes Node (slug, type, domain, file, statement, planned, provenance, assumptions, code_refs, depends_on, blocked_by), Edge (from_slug, to_slug, type), BlastRadius, ValidationReport.",
+      "planned": false,
+      "provenance": "\"The data model \u2014 Node, Edge, BlastRadius, ValidationReport as specified in the architecture.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "backend-interface": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "A SpecQueryBackend protocol defines read-only methods: get_node, get_all_nodes, get_nodes_by_type, get_nodes_by_domain, get_domains; get_edges_from, get_edges_to; get_slugs_for_path, get_paths_for_slug; dependents, dependencies, blast_radius; get_planned, get_open_questions, get_unconfirmed_assumptions, get_orphans, get_domain_coupling; find, check_slug_available; validate; rebuild, is_stale.",
+      "planned": false,
+      "provenance": "\"Query backends are read-only. Any backend that implements this interface can power the CLI.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "file-backend": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "FileQueryBackend parses markdown files on every call; zero infrastructure, zero setup; deterministic; correct for scale up to ~200 requirements (under 100ms per call). Column-0 lines are node declarations; 2-space-indent lines are sub-lines with sigils.",
+      "planned": false,
+      "provenance": "\"FileQueryBackend (default, always available). Parses markdown files on every call. Zero infrastructure, zero setup.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "C:column-zero",
+        "C:two-space-indent"
+      ],
+      "blocked_by": []
+    },
+    "json-cache-backend": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "JsonCacheBackend wraps FileQueryBackend; serializes graph to .spec/graph.json and code index to .spec/code-index.json; checks file mtimes and transparently rebuilds when stale. Powers spec scope (O(1) code-index), spec impact (graph traversal), spec orient (domain summaries).",
+      "planned": false,
+      "provenance": "\"JsonCacheBackend (phase 2, committed to repo). Serializes the parsed graph to .spec/graph.json and the code-path reverse index to .spec/code-index.json.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "file-backend"
+      ],
+      "blocked_by": []
+    },
+    "cache-committed": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "The .spec/ cache files are committed to the repository. Their git diff in a PR is machine-readable record of spec changes; CI can fail fast on stale cache; fresh clone has up-to-date index without build step.",
+      "planned": false,
+      "provenance": "\"The cache files are committed to the repository. A fresh clone already has an up-to-date index; no build step needed.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "json-cache-backend"
+      ],
+      "blocked_by": []
+    },
+    "graphdb-backend": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "GraphDbBackend implements the same read-only interface; syncs from files on rebuild(); optional external plugin for 1000+ requirements; swap via SPEC_BACKEND=graphdb; CLI and format unchanged.",
+      "planned": false,
+      "provenance": "\"GraphDbBackend (phase 3, external plugin). Implements the same read-only interface. Optional; team at 50 requirements never needs it.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "backend-interface"
+      ],
+      "blocked_by": []
+    },
+    "backend-selection": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "Backend is chosen via SPEC_BACKEND env (file | json | graphdb), SPEC_DIR for path; get_backend() returns the appropriate implementation.",
+      "planned": false,
+      "provenance": "\"Backend selection \u2014 get_backend() uses SPEC_BACKEND, SPEC_DIR; file, json, graphdb.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "file-writer-separate": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "Mutation is only through the file writer. Spec write writes to markdown files; query backends are invalidated after write (cache stale, graph DB incremental update if running). File writer enforces column-0, 2-space indent, pre-write validation (slug availability, dangling deps).",
+      "planned": false,
+      "provenance": "\"When spec write creates or modifies an entry, it writes to the markdown file. It never writes to a query backend. SpecFileWriter is a separate concern from SpecQueryBackend.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "C:backend-readonly"
+      ],
+      "blocked_by": []
+    },
+    "rebuild-from-files": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/storage.md",
+      "statement": "Any backend can be deleted and rebuilt from the spec files; spec.py rebuild regenerates cache in seconds; no data at risk.",
+      "planned": false,
+      "provenance": "\"Any backend can be deleted and rebuilt. If the cache is stale, corrupt, or absent, python specs/spec.py rebuild regenerates it from the files in seconds.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:cli-stdlib-only": {
+      "type": "constraint",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec.py requires only Python 3.9+ standard library; no external dependencies.",
+      "planned": false,
+      "provenance": "\"It requires only Python 3.9+ standard library. No external dependencies.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "structured-output": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "Every CLI command outputs structured plain text for direct inclusion in an agent's context window \u2014 formatted, labeled, actionable; not JSON or raw file content.",
+      "planned": false,
+      "provenance": "\"Every command outputs structured plain text designed for direct inclusion in an agent's context window. Not JSON. Not raw file content.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "backend-agnostic-output": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "CLI produces identical output regardless of which query backend (file, json, graphdb) is active.",
+      "planned": false,
+      "provenance": "\"The CLI produces identical output regardless of which query backend is active.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "backend-interface"
+      ],
+      "blocked_by": []
+    },
+    "spec-orient": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec orient \u2014 start of maintain-mode session; output: === SPEC ORIENT ===, project/purpose from CONTEXT, hard constraints, DOMAINS table, OPEN QUESTIONS, UNCONFIRMED ASSUMPTIONS, PLANNED, DOMAIN COUPLING, next-step hint.",
+      "planned": false,
+      "provenance": "\"Start of every maintain-mode session. Full product surface in a single structured package.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-scope": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec scope <path> \u2014 before code work; input: file, directory, or file:line; output: every spec entry governing path (REQUIREMENTS, CONSTRAINTS, DEPENDED ON BY, OPEN QUESTIONS); or \"No spec entries reference this path\" with reconcile hint.",
+      "planned": false,
+      "provenance": "\"An agent is about to read or modify code. Called before any code work. Compact; under 400 tokens.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-context": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec context <slug> \u2014 full context for one entry; output: type, domain, implemented|planned, file path, statement, provenance, assumptions, code refs, constraints governing domain, depends on, depended on by, blocked by.",
+      "planned": false,
+      "provenance": "\"Agent needs to deeply understand a single entry \u2014 before implementing, modifying, or reasoning about its behavior.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-impact": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec impact <slug> \u2014 before changing an entry or its code; output: direct dependents, transitive dependents, all code in blast radius, unconfirmed assumptions in path, planned entries in path.",
+      "planned": false,
+      "provenance": "\"Before modifying, deleting, or significantly changing an entry or its code. Surfaces the full blast radius.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-find": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec find <keywords> \u2014 free-text search when slug unknown; output: ranked matches (slug, domain, type, statement) or \"No entries match\" with orient hint.",
+      "planned": false,
+      "provenance": "\"Agent doesn't know the slug. Searching by concept or description.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-domain": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec domain <name> \u2014 full domain load for editing; output: domain summary, file path, CONSTRAINTS, REQUIREMENTS (implemented/planned), OPEN QUESTIONS, OUT OF SCOPE.",
+      "planned": false,
+      "provenance": "\"Maintain-mode agent loading a full domain to edit, review, or understand completely.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-validate": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec validate \u2014 before every commit; non-zero exit on errors. Checks: dead-ref, phantom-slug, duplicate-slug, dependency-cycle, ghost-scope (ERROR); silent-impl, orphan-question, orphan-entry (WARN); unconfirmed-assumption (INFO). Output: ERRORS, WARNINGS, UNCONFIRMED ASSUMPTIONS, CLEAN, Result. Exit 0 only when zero errors.",
+      "planned": false,
+      "provenance": "\"Before every commit. Non-zero exit code if any errors are found. Exit code 0 only when zero errors.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-diff": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec diff [ref] \u2014 after writing/modifying specs; default ref HEAD. Output: semantic change manifest \u2014 IMPLEMENTED, NEW ENTRIES, MODIFIED, RESOLVED QUESTIONS, REMOVED ENTRIES, CONSTRAINTS CHANGED; assumptions requiring confirmation.",
+      "planned": false,
+      "provenance": "\"After an agent writes or modifies specs. Produces the human review artifact.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-write": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec write \u2014 structured input (JSON stdin or args): domain, entries (slug, type, statement, provenance, assumptions, planned, depends_on). Validates (slug available, deps exist, domain exists) then shows would-write block and Confirm; in autonomous mode agent writes and records in spec diff.",
+      "planned": false,
+      "provenance": "\"Agent is capturing new requirements from a user conversation or request. Takes structured input, validates before writing.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-reconcile": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec reconcile <path> or --since <ref> \u2014 surfaces drift: phantom slugs (spec: in code, no entry), silent impl ( but code has spec:), dead refs (~ path not found). Output: sections for each drift type, CLEAN if none.",
+      "planned": true,
+      "provenance": "\"Code has changed without the spec being updated. Surfaces drift between what the spec says and what the code contains.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-check-slug": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec check-slug <slug> \u2014 before writing new entry; output: TAKEN with file and entry snippet plus suggestions, or Available.",
+      "planned": false,
+      "provenance": "\"Before writing any new entry, to verify the slug is available.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "rebuild-command": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/cli.md",
+      "statement": "spec rebuild (or equivalent) regenerates cache from spec files when stale, corrupt, or absent.",
+      "planned": false,
+      "provenance": "\"python specs/spec.py rebuild regenerates it from the files in seconds.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "rebuild-from-files"
+      ],
+      "blocked_by": []
+    },
+    "C:scope-before-code": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "The agent always calls spec scope before touching code.",
+      "planned": false,
+      "provenance": "\"The agent always calls spec scope before touching code.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:validate-before-commit": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "The agent always calls spec validate before committing.",
+      "planned": false,
+      "provenance": "\"The agent always calls spec validate before committing.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:no-silent-gaps": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Every detail the agent decides on the user's behalf (number, threshold, choice) gets a ! line; \"it seemed obvious\" is not an excuse.",
+      "planned": false,
+      "provenance": "\"Never silently fill a gap. Every specific detail the agent decided on the user's behalf gets a ! line.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:spec-code-same-commit": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "One commit contains both the spec change and the code change; never split them.",
+      "planned": false,
+      "provenance": "\"One commit contains both the spec change and the code change. Never split them.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:no-direct-cache-write": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "The agent never writes to .spec/ directly; the cache is machine-generated from the markdown files; CLI and pre-commit hook manage it.",
+      "planned": false,
+      "provenance": "\"Never write to .spec/ directly. The .spec/ directory is machine-generated from the markdown files.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-backlink": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Every function, class, or logical block that implements a spec entry carries a spec: comment at the top of the block; language-agnostic; one comment per block; multiple slugs comma-separated; slugs only, no description or file paths.",
+      "planned": false,
+      "provenance": "\"Every function, class, or logical block that implements a spec entry carries a spec: comment. Language-agnostic, always the same format.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "coding-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Coding session (consume mode): (1) spec scope <file>, (2) spec context <slug> if needed, (3) spec impact <slug> before significant changes, (4) make code changes, (5) spec validate, (6) spec diff, (7) commit spec + code together.",
+      "planned": false,
+      "provenance": "\"Coding session (consume mode): spec scope, context, impact, make changes, validate, diff, commit together.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "spec-scope",
+        "spec-validate"
+      ],
+      "blocked_by": []
+    },
+    "maintain-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Maintain session: (1) spec orient, (2) spec domain <name>, (3) write or update spec entries, (4) spec validate, (5) spec diff, (6) commit.",
+      "planned": false,
+      "provenance": "\"Spec maintenance session (maintain mode): orient, domain, write/update, validate, diff, commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "new-feature-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "New feature session: (1) spec orient, (2) spec find <keywords>, (3) spec domain <affected-domain>, (4) clarify with user, (5) spec write, (6) spec validate, (7) spec diff, (8) implement code, (9) spec validate, (10) spec diff, (11) commit spec + code together.",
+      "planned": false,
+      "provenance": "\"New feature session: orient, find, domain, clarify, write, validate, diff, implement, validate, diff, commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "debugging-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Debugging session: (1) spec scope <file-with-bug>, (2) spec context <relevant-slug>, (3) debug and fix, (4) spec validate, (5) commit if spec needed updating.",
+      "planned": false,
+      "provenance": "\"Debugging session: scope, context, debug and fix, validate, commit if spec updated.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "assumption-confirmation": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Human review of ! assumptions: confirm (remove !), correct (rewrite statement, remove !), or defer (keep !). spec diff is the primary surface; new ! always requires human review.",
+      "planned": false,
+      "provenance": "\"The assumption confirmation flow. When a human sees ! assumed X in a diff, they have three options: Confirm, Correct, Defer.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "contradiction-surfacing": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Before touching spec or code, if the request contradicts an existing entry, stop and surface: Understood, Contradiction (slug + statement), Options (Replace / Add variant / Out-of-scope reject), Question.",
+      "planned": false,
+      "provenance": "\"If the request contradicts an existing entry, stop and surface the contradiction with options.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "pre-commit-hook": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "Pre-commit hook: when specs/ (or spec/) files are staged, run spec validate (exit 1 on errors), then rebuild cache and git add .spec/.",
+      "planned": false,
+      "provenance": "\"If git diff --cached includes spec files, run spec validate; on success run rebuild and git add .spec/.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "spec-validate",
+        "cache-committed"
+      ],
+      "blocked_by": []
+    },
+    "drift-reconciliation": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec reconcile <path> or --since <ref> surfaces phantom slugs, silent implementation, dead refs; output includes resolution hints. After autonomous code changes, run reconcile, validate, diff and include in PR description.",
+      "planned": false,
+      "provenance": "\"Reconciliation handles the case where code diverged from spec. When an agent modifies code autonomously, run reconcile, validate, diff; include in PR description.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-dead-ref": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports ERROR when a ~ path in specs does not resolve to a real file or directory.",
+      "planned": false,
+      "provenance": "\"Every ~ path in specs resolves to a real file or directory. dead-ref blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-phantom-slug": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports ERROR when spec: slug in code has no matching entry in specs.",
+      "planned": false,
+      "provenance": "\"Every spec: in code has a matching entry in specs. phantom-slug blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-duplicate-slug": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports ERROR when two entries share the same slug anywhere in the tree.",
+      "planned": false,
+      "provenance": "\"All slugs are globally unique across the specs tree. duplicate-slug blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-cycle": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports ERROR when a dependency chain forms a cycle.",
+      "planned": false,
+      "provenance": "\"No dependency chain forms a cycle. dependency-cycle blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-ghost-scope": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports ERROR when an entry has no > line.",
+      "planned": false,
+      "provenance": "\"Every node has a > line. ghost-scope blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-dangling-dep": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports ERROR when an @ target does not exist as a slug in the specs tree.",
+      "planned": false,
+      "provenance": "\"Every @ target exists as a slug in the specs tree. no-dangling-dep blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-dangling-block": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports ERROR when a ? Q:slug target does not exist as a question node.",
+      "planned": false,
+      "provenance": "\"Every ? Q:slug target exists as a question node. no-dangling-block blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "validation-warnings": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/i1/spec/agent.md",
+      "statement": "spec validate reports WARN for silent-impl ( but code has spec:), orphan-question (Q: not referenced by any ?), orphan-entry (no ~ refs, no @ dependents, not planned); warnings do not fail the build.",
+      "planned": true,
+      "provenance": "\"Warnings: silent-impl, orphan-question, orphan-entry. Warnings do not fail the build.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    }
+  },
+  "edges": [
+    {
+      "from": "multi-hop-cli",
+      "to": "property-graph",
+      "type": "depends-on"
+    },
+    {
+      "from": "slug-format",
+      "to": "C:slug-unique",
+      "type": "depends-on"
+    },
+    {
+      "from": "slug-format",
+      "to": "C:slug-permanent",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-backend",
+      "to": "C:column-zero",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-backend",
+      "to": "C:two-space-indent",
+      "type": "depends-on"
+    },
+    {
+      "from": "json-cache-backend",
+      "to": "file-backend",
+      "type": "depends-on"
+    },
+    {
+      "from": "cache-committed",
+      "to": "json-cache-backend",
+      "type": "depends-on"
+    },
+    {
+      "from": "graphdb-backend",
+      "to": "backend-interface",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-writer-separate",
+      "to": "C:backend-readonly",
+      "type": "depends-on"
+    },
+    {
+      "from": "backend-agnostic-output",
+      "to": "backend-interface",
+      "type": "depends-on"
+    },
+    {
+      "from": "rebuild-command",
+      "to": "rebuild-from-files",
+      "type": "depends-on"
+    },
+    {
+      "from": "coding-session-protocol",
+      "to": "spec-scope",
+      "type": "depends-on"
+    },
+    {
+      "from": "coding-session-protocol",
+      "to": "spec-validate",
+      "type": "depends-on"
+    },
+    {
+      "from": "pre-commit-hook",
+      "to": "spec-validate",
+      "type": "depends-on"
+    },
+    {
+      "from": "pre-commit-hook",
+      "to": "cache-committed",
+      "type": "depends-on"
+    }
+  ]
+}
