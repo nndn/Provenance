@@ -16,8 +16,28 @@ The markdown files in `prov/` are always the source of truth. Any tool,
 cache, or index is built from those files and can be regenerated at any time.
 An agent or developer can always grep the files directly — no tooling required.
 
-Read `spec/CONTEXT.md` first. It contains the project purpose, hard constraints,
-non-goals, and domain map. It is the entry point to every session.
+Read `prov/CONTEXT.md` (or `spec/CONTEXT.md` or `specs/CONTEXT.md`) first. It contains
+the project purpose, hard constraints, non-goals, and domain map. It is the entry
+point to every session.
+
+---
+
+## Installing the prov CLI
+
+The agent uses the `prov` CLI to query and validate the spec. Install it once per
+machine or per project:
+
+| Platform | Command |
+|----------|---------|
+| **PyPI (recommended)** | `pipx install provenance-cli` |
+| **GitHub** | `pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'` |
+| **Project-local** | Run `sh install.sh` from the Provenance repo into your project |
+
+**Resolve spec directory:** `prov` looks for `prov/`, `spec/`, or `specs/` from the
+current directory (or `$SPEC_DIR` if set). Run `prov` from the project root.
+
+Commands: `prov orient`, `prov scope <path>`, `prov context <slug>`, `prov validate`, etc.
+If `prov` is not installed globally, use `python prov/prov.py <command>` instead.
 
 ---
 
@@ -56,8 +76,8 @@ directly creates a cache that does not reflect the files. The pre-commit hook
 manages it. You never touch it.
 
 **7. Validate before every commit.**
-Run `python prov/prov.py validate` before committing. Fix all errors. Zero errors
-is the only acceptable state to commit.
+Run `prov validate` (or `python prov/prov.py validate` if using project-local copy)
+before committing. Fix all errors. Zero errors is the only acceptable state to commit.
 
 **8. Spec before code. Always.**
 Never write a line of code in response to a user request without first proposing
@@ -106,7 +126,7 @@ Q:slug:    question    — unresolved decision that blocks implementation
 
 ```bash
 # Check slug availability — always do this first
-python prov/prov.py check-slug <proposed-slug>
+prov check-slug <proposed-slug>
 # or manually:
 grep -r "^<proposed-slug>:" spec/
 ```
@@ -255,11 +275,11 @@ Never skip a phase. Never swap the order.
 Before touching anything, read the spec:
 
 ```bash
-python prov/prov.py orient              # full surface: domains, questions, backlog
-python prov/prov.py find <keywords>     # check if related entries already exist
-python prov/prov.py scope <path>        # if you know which files are affected
-python prov/prov.py context <slug>      # full details on each affected entry
-python prov/prov.py impact <slug>       # blast radius before changing anything
+prov orient              # full surface: domains, questions, backlog
+prov find <keywords>     # check if related entries already exist
+prov scope <path>        # if you know which files are affected
+prov context <slug>      # full details on each affected entry
+prov impact <slug>       # blast radius before changing anything
 ```
 
 If you need to understand the current behavior from code, read the code referenced
@@ -339,10 +359,10 @@ something, return to Phase 2 and revise.
 After the user confirms the proposal:
 
 ```bash
-python prov/prov.py check-slug <slug>   # before each new entry — verify availability
+prov check-slug <slug>   # before each new entry — verify availability
 # Edit the spec domain .md file(s) directly
-python prov/prov.py validate            # must pass with zero errors before continuing
-python prov/prov.py diff                # show the user what changed
+prov validate            # must pass with zero errors before continuing
+prov diff                # show the user what changed
 ```
 
 Rules:
@@ -362,7 +382,7 @@ moving to implementation.
 Now write the code:
 
 ```bash
-python prov/prov.py scope <file>        # confirm what governs the code you are about to write
+prov scope <file>        # confirm what governs the code you are about to write
 ```
 
 - Implement exactly what the spec now says. No extras.
@@ -378,7 +398,7 @@ After implementation, catch any drift between what the spec says and what the
 code actually does:
 
 ```bash
-python prov/prov.py sync <path>         # read the full drift report
+prov sync <path>         # read the full drift report
 ```
 
 The sync report will show:
@@ -390,17 +410,17 @@ The sync report will show:
 For each item, apply the appropriate fix:
 
 ```bash
-python prov/prov.py sync mark-implemented <slug>              # [planned] → implemented
-python prov/prov.py sync remove-ref <slug> <ref>              # remove dead ~ ref
-python prov/prov.py sync update-ref <slug> <old> <new>        # update moved ~ ref
-python prov/prov.py sync remove-backlink <file> <line> <slug> # remove phantom spec: comment
+prov sync mark-implemented <slug>              # [planned] → implemented
+prov sync remove-ref <slug> <ref>              # remove dead ~ ref
+prov sync update-ref <slug> <old> <new>        # update moved ~ ref
+prov sync remove-backlink <file> <line> <slug> # remove phantom spec: comment
 ```
 
 Then close the session:
 
 ```bash
-python prov/prov.py validate            # zero errors required
-python prov/prov.py diff                # final review — show the user what changed
+prov validate            # zero errors required
+prov diff                # final review — show the user what changed
 # Commit: spec + code together
 # Message: feat(<domain>): <description>
 #          spec: implement <slug>, add <slug>
@@ -413,8 +433,8 @@ python prov/prov.py diff                # final review — show the user what ch
 Debugging follows the same flow but starts from Phase 1 scoped to the bug:
 
 ```bash
-python prov/prov.py scope <file-with-bug>   # what should this file do?
-python prov/prov.py context <slug>          # full requirement details
+prov scope <file-with-bug>   # what should this file do?
+prov context <slug>          # full requirement details
 ```
 
 Determine root cause:
@@ -434,42 +454,46 @@ When code and spec have drifted without going through the normal flow (e.g.
 after a bulk refactor or after importing existing code):
 
 ```bash
-python prov/prov.py sync src/           # full drift report
+prov sync src/           # full drift report
 ```
 
 For each item in the report, present it to the user with context. Never apply
 a fix without explicit user confirmation. Apply confirmed fixes with the sync
 patch sub-commands above, then validate → diff → commit.
 
-For a read-only drift report: `python prov/prov.py reconcile src/`
+For a read-only drift report: `prov reconcile src/`
 
 ---
 
 ## CLI quick reference
 
+Run `prov <command>` (or `python prov/prov.py <command>` if using project-local copy).
+Always run from the project root; `prov` finds `prov/`, `spec/`, or `specs/` automatically.
+
 ```bash
 # Session start
-python prov/prov.py orient              # full surface: domains, questions, backlog
+prov orient              # full surface: domains, questions, backlog
 
 # Coding entry point
-python prov/prov.py scope <path>        # what governs this file or directory?
-python prov/prov.py context <slug>      # full entry context
-python prov/prov.py impact <slug>       # blast radius before changing anything
+prov scope <path>        # what governs this file or directory?
+prov context <slug>      # full entry context
+prov impact <slug>       # blast radius before changing anything
 
 # Discovery
-python prov/prov.py find <keywords>     # when you don't know the slug
-python prov/prov.py domain <name>       # full domain load
+prov find <keywords>     # when you don't know the slug
+prov domain <name>       # full domain load
 
 # Writing
-python prov/prov.py check-slug <slug>   # is this slug available?
-python prov/prov.py write               # guided authoring with pre-write validation
+prov check-slug <slug>   # is this slug available?
+prov write               # guided authoring with pre-write validation
 
 # Integrity
-python prov/prov.py validate            # run before every commit
-python prov/prov.py diff [ref]          # semantic change manifest for human review
-python prov/prov.py reconcile <path>    # detect code↔spec drift (read-only report)
-python prov/prov.py sync [path]         # interactive drift resolution (fix drift in-place)
-python prov/prov.py rebuild             # rebuild cache from files
+prov validate            # run before every commit
+prov diff [ref]          # semantic change manifest for human review
+prov reconcile <path>    # detect code↔spec drift (read-only report)
+prov sync [path]         # interactive drift resolution (fix drift in-place)
+prov rebuild             # rebuild cache from files
+prov init                # scaffold CONTEXT.md (in a new project)
 ```
 
 ---
@@ -597,10 +621,10 @@ spec: implement session-expiry, add ! assumption for 30-day value
 
 ---
 
-## Fallback: when spec.py is unavailable
+## Fallback: when prov CLI is unavailable
 
-If `prov/prov.py` is absent or broken, fall back to pure grep. The spec is
-always readable without any tooling:
+If `prov` is not installed or `prov/prov.py` is absent, fall back to pure grep.
+The spec is always readable without any tooling:
 
 ```bash
 # orient

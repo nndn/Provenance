@@ -6,6 +6,89 @@
 
 ---
 
+## Installation
+
+**Requirements:** Python 3.9+
+
+### Install the `prov` CLI (recommended)
+
+Install from PyPI (after release) or GitHub:
+
+| Platform | Command |
+|----------|---------|
+| **macOS / Linux / Windows (PyPI)** | `pipx install provenance-cli` |
+| **macOS / Linux (GitHub)** | `pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'` |
+| **Any (pip)** | `pip install provenance-cli` or `pip install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'` |
+
+**Recommendation:** Use [pipx](https://pypa.github.io/pipx/) for CLI tools — it installs `prov` in an isolated environment without affecting your project dependencies.
+
+```sh
+# Install pipx first (if needed)
+# macOS:   brew install pipx && pipx ensurepath
+# Linux:   apt install pipx  # or your package manager
+# Windows: pip install pipx && pipx ensurepath
+
+pipx install provenance-cli    # from PyPI (recommended)
+# or, before release:
+pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'
+prov --help
+```
+
+To install a specific version:
+
+```sh
+pipx install 'provenance-cli==0.1.0'   # from PyPI
+pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git@v0.1.0'   # from GitHub
+```
+
+### Install into a project (copy prov into your repo)
+
+If you prefer to copy the CLI into your project instead of a global install:
+
+```sh
+git clone https://github.com/nndn/Provenance.git /tmp/provenance
+cd /path/to/your-project
+sh /tmp/provenance/install.sh
+```
+
+This creates `prov/prov.py` and `prov/CONTEXT.md` in your project. Run with:
+
+```sh
+python prov/prov.py orient
+```
+
+---
+
+## Publishing to PyPI
+
+Releases are published automatically when you create a GitHub release. One-time setup:
+
+1. Create an account at [pypi.org](https://pypi.org) and [test.pypi.org](https://test.pypi.org) (optional, for test releases).
+
+2. Enable trusted publishing on PyPI:
+   - Create a new project at pypi.org (name: `provenance-cli`) or use an existing one.
+   - Go to **Your project** → **Publishing** → **Add a new pending publisher**.
+   - Owner: `nndn`, Repository: `Provenance`, Workflow: `publish-pypi.yml`.
+
+3. Create a release:
+   ```sh
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+   Then create the release on GitHub ( Releases → Create a new release → Choose the tag).
+
+The workflow builds and publishes to PyPI on release publish.
+
+**Manual publish:**
+```sh
+pip install build twine
+python -m build
+twine upload dist/*
+```
+(requires `TWINE_USERNAME` and `TWINE_PASSWORD` or API token.)
+
+---
+
 ## What you get
 
 | File | Purpose |
@@ -23,15 +106,18 @@ No external dependencies. Python 3.9+. Everything is plain text — grep always 
 ## Quick start
 
 ```sh
-# 1. Clone
-git clone <this-repo-url> /tmp/provenance
+# Option A: Install CLI globally (from GitHub)
+pipx install provenance-cli
 
-# 2. Install into your project
+# Option B: Install into your project
+git clone https://github.com/nndn/Provenance.git /tmp/provenance
 cd /path/to/your-project
 sh /tmp/provenance/install.sh
 
-# 3. Edit prov/CONTEXT.md, then orient
-python prov/prov.py orient
+# Then: edit prov/CONTEXT.md (or prov/CONTEXT.md) and run
+prov orient                    # if installed globally
+# or
+python prov/prov.py orient     # if using project-local copy
 ```
 
 After install:
@@ -63,25 +149,27 @@ Once the agent reads `agent.md`, it will automatically call `prov scope` before 
 
 ## CLI
 
+Run `prov <command>` (if installed globally) or `python prov/prov.py <command>` (project-local).
+
 ```sh
-python prov/prov.py orient              # start every session here
+prov orient                    # start every session here
 
-python prov/prov.py scope <path>        # what governs this file or directory?
-python prov/prov.py context <slug>      # full entry: statement, provenance, deps, code refs
-python prov/prov.py impact <slug>       # blast radius before changing anything
+prov scope <path>              # what governs this file or directory?
+prov context <slug>            # full entry: statement, provenance, deps, code refs
+prov impact <slug>             # blast radius before changing anything
 
-python prov/prov.py find <keywords>     # search when you don't know the slug
-python prov/prov.py domain <name>       # load a full domain
+prov find <keywords>           # search when you don't know the slug
+prov domain <name>             # load a full domain
 
-python prov/prov.py check-slug <slug>   # is this slug available?
-python prov/prov.py write               # add entries (JSON input, validates before writing)
+prov check-slug <slug>         # is this slug available?
+prov write                     # add entries (JSON input, validates before writing)
 
-python prov/prov.py validate            # run before every commit — zero errors only
-python prov/prov.py diff [ref]          # semantic change manifest vs HEAD or any ref
-python prov/prov.py reconcile <path>    # detect code↔spec drift
-python prov/prov.py rebuild             # rebuild .spec/ cache from files
+prov validate                  # run before every commit — zero errors only
+prov diff [ref]                # semantic change manifest vs HEAD or any ref
+prov reconcile <path>          # detect code↔spec drift
+prov rebuild                   # rebuild .spec/ cache from files
 
-python prov/prov.py init                # scaffold CONTEXT.md in a new project
+prov init                      # scaffold CONTEXT.md in a new project
 ```
 
 ---

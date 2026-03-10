@@ -33,3 +33,4 @@ format specs/format.md
 storage specs/storage.md
 cli specs/cli.md
 agent specs/agent.md
+install specs/install.md
