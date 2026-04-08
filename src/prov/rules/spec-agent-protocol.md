@@ -28,7 +28,7 @@ The markdown files in `prov/`, `spec/`, or `specs/` are the source of truth. The
 
 1. **Read before write.** Never modify code or spec without first understanding what governs it. Use `prov scope <path>` or `grep -r "~<path>" spec/`.
 2. **Every gap gets a `!` line.** Any value, threshold, or choice made on the user's behalf must be marked. "It seemed obvious" is never an excuse.
-3. **Every entry needs a `>` line.** No entry exists without provenance. Quote the user where possible; otherwise `> inferred from: <reasoning>` with a `!` line.
+3. **Every entry needs a `>` line.** No entry exists without provenance. Use a source prefix: `user:`, `inferred:`, `code:`, `regulatory:`, `derived`. Quote the user where possible (`> user: "..."`). For agent interpretation use `> inferred:` with `!`. For code-derived use `> code:` with `!`. See spec-entry-format skill.
 4. **Spec and code in the same commit.** Never split them.
 5. **No evolutionary language.** The spec is always current. Never write "previously", "changed from", "deprecated". Git records history; the spec records intent.
 6. **Never write to `.spec/`.** Machine-generated cache. The pre-commit hook manages it.
@@ -62,7 +62,7 @@ Spec updates happen in **Phase 4** and **Phase 6** — proactively, every time.
 
 **Phase 3:** Propose only — do not write yet. Tell the user: (1) slugs added/modified/removed + which domain file + before/after, (2) how behavior changes for the user, (3) which flows are affected (`prov impact <slug>`), (4) every `!` assumption in plain language, (5) what is out of scope. Wait for confirmation.
 
-**Phase 4:** Edit domain `.md` files. `prov check-slug <slug>` before writing. New entries get `[planned]` if not yet coded. Every `!` from Phase 3 as sub-line. Every entry has `> provenance`. Run `prov validate` (zero errors) + `prov diff`. Surface remaining `!` lines before Phase 5.
+**Phase 4:** Edit domain `.md` files. `prov check-slug <slug>` before writing. New entries get `[planned]` if not yet coded. Every `!` from Phase 3 as sub-line. Every entry has `> provenance` with source prefix per spec-entry-format. Run `prov validate` (zero errors) + `prov diff`. Surface remaining `!` lines before Phase 5.
 
 **Phase 5:** `prov scope <file>` to confirm what governs the code. Implement exactly what the spec says — no extras. Every block that implements a spec entry: `# spec: slug` at the top. Multiple slugs comma-separated.
 

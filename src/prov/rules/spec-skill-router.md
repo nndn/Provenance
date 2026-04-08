@@ -47,7 +47,7 @@ How to treat every task as a chance to compile user intent into the spec. Five q
 ---
 
 ### `spec-entry-format`
-The format reference. Node types (`slug:`, `C:slug:`, `Q:slug:`), sigils (`>`, `!`, `@`, `~`, `?`), slug rules, file format invariants (column-0, 2-space indent), complete domain file example, code backlink format, commit message format, grep patterns, prov CLI quick reference.
+The format reference. Node types (`slug:`, `C:slug:`, `Q:slug:`), sigils (`>`, `!`, `@`, `~`, `?`), provenance source types (user, inferred, code, regulatory, derived), slug rules, file format invariants (column-0, 2-space indent), complete domain file example, code backlink format, commit message format, grep patterns, prov CLI quick reference.
 
 **Path:** `src/prov/skills/spec-entry-format/SKILL.md`
 **Use when:** Writing spec entries, adding code backlinks, checking format, reading an unfamiliar entry structure.

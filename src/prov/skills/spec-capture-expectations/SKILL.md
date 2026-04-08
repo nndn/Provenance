@@ -40,8 +40,8 @@ Use the tables in Reference: **When to add a new entry** and **When NOT to add**
 
 ### Step 3 — Record implicit expectations in the right form
 
-- User’s words reveal unstated behavior → add requirement with `>` quoting them and `~` when implemented (see Reference example).
-- You infer a value they didn’t give (e.g. "keep it fast") → add entry with `> "user quote"` and `  ! assumed <value> — <reason unconfirmed>`. Surface the `!` in Phase 3; user confirms, corrects, or defers (see Reference example).
+- User’s words reveal unstated behavior → add requirement with `> user: "exact quote"` and `~` when implemented (see Reference example).
+- You infer a value they didn’t give (e.g. "keep it fast") → add entry with `> inferred: reasoning` and `  ! assumed <value> — <reason unconfirmed>`. Surface the `!` in Phase 3; user confirms, corrects, or defers (see Reference example).
 
 ### Step 4 — Apply assumption discipline
 
@@ -71,8 +71,8 @@ Every task is a chance to compile user intent into the spec. A well-maintained s
 
 | Signal | Action |
 |--------|--------|
-| User states a behavior explicitly | Add requirement entry with `>` quoting their words |
-| User implies a behavior ("obviously it should...") | Add entry with `> inferred from: <reasoning>` and `!` line |
+| User states a behavior explicitly | Add requirement entry with `> user: "their words"` |
+| User implies a behavior ("obviously it should...") | Add entry with `> inferred: <reasoning>` and `!` line |
 | User specifies a constraint ("always", "never", "required") | Add `C:slug:` constraint entry |
 | User's request would fail in an edge case not yet covered | Add entry for that edge case |
 | Fixing a bug reveals the correct behavior was never specified | Add entry for the correct behavior |
@@ -96,7 +96,7 @@ user: "make sure the export always includes the full history"
 
 ```
 export-full-history: Exports always include the complete history of the record.
-  > "make sure the export always includes the full history"
+  > user: "make sure the export always includes the full history"
   ~ src/exports/history.py
 ```
 
@@ -110,7 +110,7 @@ user: "keep it fast"
 
 ```
 export-performance: Export completes within 5 seconds for records up to 10,000 entries. [planned]
-  > "keep it fast"
+  > inferred: user said "keep it fast" — interpreted as 5s / 10k entries
   ! assumed 5s / 10k entries — "fast" is unconfirmed
 ```
 

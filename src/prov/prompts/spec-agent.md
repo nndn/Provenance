@@ -26,7 +26,7 @@ These apply in every session without exception.
 
 1. **Read before write.** Never modify code or spec without first understanding what governs it.
 2. **Every gap gets a `!` line.** Any value, threshold, or choice you decide on the user's behalf must be marked. "It seemed obvious" is never an excuse.
-3. **Every entry needs a `>` line.** No entry exists without provenance. Quote the user where possible; otherwise write `> inferred from: <reasoning>` and add `!`.
+3. **Every entry needs a `>` line.** No entry exists without provenance. Use a source prefix: `user:`, `inferred:`, `code:`, `regulatory:`, `derived`. Quote the user where possible (`> user: "..."`). For agent interpretation use `> inferred:` with `!`. For code-derived use `> code:` with `!`. See spec-entry-format skill.
 4. **Spec and code in the same commit.** Never split them.
 5. **No evolutionary language.** The spec is always current. Never write "previously", "changed from", "deprecated". Git records history; the spec records intent.
 6. **Never write to `.spec/`.** The cache is machine-generated. The pre-commit hook manages it.
@@ -159,7 +159,7 @@ Rules:
 - New entries go in the correct domain file under the correct section.
 - Unimplemented entries get `[planned]`.
 - Every `!` assumption from Phase 3 appears as a `  ! assumption text` sub-line.
-- Every entry has a `  > provenance` line. No exceptions.
+- Every entry has a `  > provenance` line with source prefix (user, inferred, code, regulatory, derived) per spec-entry-format. No exceptions.
 
 Surface any remaining `!` lines to the user for confirmation before moving to Phase 5.
 
@@ -283,7 +283,7 @@ At the beginning of every session or when picking up a new task:
 
 ```
 session-expiry: Sessions expire after 30 days of inactivity.
-  > "standard session timeout, nothing crazy"
+  > inferred: user said "standard session timeout, nothing crazy" — interpreted as 30 days
   ! assumed 30 days — "nothing crazy" is unconfirmed
   @ C:jwt-stateless
   ~ src/middleware/session.py:44
@@ -294,7 +294,7 @@ session-expiry: Sessions expire after 30 days of inactivity.
 |------|---------|
 | `session-expiry` | Slug — permanent, globally unique. Used in `spec:` backlinks in code. |
 | Statement | What the system does for the user. Current state only. |
-| `>` | Why this requirement exists. User's words where possible. |
+| `>` | Provenance — use source prefix: user, inferred, code, regulatory, derived. See spec-entry-format. |
 | `!` | Agent filled this in; user has not confirmed. |
 | `@` | This entry depends on another slug. |
 | `~` | Code implementing this entry. One line per ref. |
@@ -330,12 +330,20 @@ auth-session      ✗   domain prefix — don't
 limit             ✗   too vague
 ```
 
-**Entry format:**
+**Entry format — provenance source types:**
+
+| Type | Format | When |
+|------|--------|------|
+| user | `> user: "exact quote"` | Direct quote |
+| inferred | `> inferred: reasoning` + `!` | Agent interpretation |
+| code | `> code: path — context` + `!` | From sync/drift |
+| regulatory | `> regulatory: source — citation` | Legal/compliance |
+| derived | `> derived: slug — reasoning` | Logical consequence |
 
 ```
 slug: Statement describing observable behavior. [planned if not yet coded]
-  > "user's words" or inferred from: reasoning
-  ! assumption (only when agent filled a gap)
+  > user: "..." | inferred: ... | code: path — context | regulatory: ... | derived: slug — ...
+  ! assumption (required for inferred and code)
   @ dependency-slug (if this entry depends on another)
   ? Q:blocking-question (if blocked by an open question)
   ~ src/path/to/file.py:line (one per line, only when implemented)
@@ -345,7 +353,7 @@ slug: Statement describing observable behavior. [planned if not yet coded]
 
 ```
 C:slug: Non-negotiable rule statement.
-  > "user's words" or regulatory requirement
+  > user: "exact quote" or regulatory: source — citation
 ```
 
 **Open question format:**
@@ -365,27 +373,27 @@ Q:slug: Question that must be resolved before implementation?
 ## Constraints
 
 C:oauth-only: OAuth only — no email/password.
-  > "I don't want to deal with password resets"
+  > user: "I don't want to deal with password resets"
 
 C:jwt-stateless: Sessions are stateless JWT — no server-side session store.
-  > "I don't want to manage session infrastructure"
+  > user: "I don't want to manage session infrastructure"
 
 ## Requirements
 
 google-login: Users authenticate via Google OAuth.
-  > "we'll just do Google login for now"
+  > user: "we'll just do Google login for now"
   @ C:oauth-only
   ~ src/api/auth/google.py
   ~ src/api/auth/callback.py
 
 session-expiry: Sessions expire after 30 days of inactivity.
-  > "standard session timeout, nothing crazy"
+  > inferred: user said "standard session timeout, nothing crazy" — interpreted as 30 days
   ! assumed 30 days — "nothing crazy" is unconfirmed
   @ C:jwt-stateless
   ~ src/middleware/session.py:44
 
 admin-revoke: Admins can revoke any user session immediately. [planned]
-  > "need a kill switch for bad actors"
+  > user: "need a kill switch for bad actors"
   ! assumed token blocklist approach — not stated by user
   @ session-expiry
   ? Q:admin-revoke-scope

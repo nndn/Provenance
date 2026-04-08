@@ -93,20 +93,34 @@ def grep_spec_in_code(
         "dist",
         "build",
         ".cursor",
+        ".agents",  # agent skill/workflow documentation — not code
     }
+    # Agent config files at repo root that contain spec: examples in documentation
+    _skip_filenames = {".cursorrules", "agent.md", "GEMINI.md", "CLAUDE.md", "AGENTS.md"}
 
     if path_or_dir.is_file():
         files = [path_or_dir] if path_or_dir.suffix.lower() != ".md" else []
     else:
         files = []
-        for f in path_or_dir.rglob("*"):
-            if not f.is_file():
-                continue
-            if f.suffix.lower() == ".md":
-                continue
+        try:
+            all_entries = list(path_or_dir.rglob("*"))
+        except (PermissionError, OSError):
+            all_entries = []
+        for f in all_entries:
+            # Skip entries whose path contains a skip dir (check before is_file to avoid
+            # PermissionError on broken symlinks inside node_modules etc.)
             if any(
                 part in _skip_dirs or part.endswith(".egg-info") for part in f.parts
             ):
+                continue
+            if f.name in _skip_filenames:
+                continue
+            try:
+                if not f.is_file():
+                    continue
+            except (PermissionError, OSError):
+                continue
+            if f.suffix.lower() == ".md":
                 continue
             files.append(f)
 

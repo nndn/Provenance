@@ -98,7 +98,7 @@ prov sync update-ref <slug> <old-path> <new-path>
 
 **Phantom slug** — Code has `# spec: some-slug` but `some-slug` doesn't exist in the spec.
 
-- **Add the spec entry**: The code is right; the spec is missing the entry. Go through request flow Phase 3 → 4 to add it properly.
+- **Add the spec entry**: The code is right; the spec is missing the entry. Go through request flow Phase 3 → 4. Use provenance `> code: <file:line> — phantom slug, prov sync; user confirmed spec entry` and `! statement inferred from implementation — user confirmed after sync`. See spec-entry-format for provenance source types.
 - **Remove the backlink**: The `spec:` comment is wrong or outdated.
 
 **Dead ref** — A `~` path in the spec no longer exists.
@@ -128,6 +128,14 @@ prov reconcile src/ --since HEAD  # since last commit (if supported)
 ```
 
 Output sections: PHANTOM SLUGS, SILENT IMPLEMENTATIONS, DEAD REFS, CLEAN (if none).
+
+### Provenance for entries added from code
+
+When adding a spec entry for a phantom slug (code has `spec:` but no entry), the entry is code-derived:
+
+- **Provenance**: `> code: <file:line> — phantom slug, prov sync; user confirmed spec entry`
+- **Assumption**: `! statement inferred from implementation — user confirmed after sync`
+- Always pair `code:` provenance with `!` until the user explicitly confirms the statement reflects their intent.
 
 ---
 

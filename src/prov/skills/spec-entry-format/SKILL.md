@@ -52,7 +52,7 @@ See Reference → Commit format. Spec-only vs code+spec; always include the `spe
 
 ```
 session-expiry: Sessions expire after 30 days of inactivity.
-  > "standard session timeout, nothing crazy"
+  > inferred: user said "standard session timeout, nothing crazy" — interpreted as 30 days
   ! assumed 30 days — "nothing crazy" is unconfirmed
   @ C:jwt-stateless
   ~ src/middleware/session.py:44
@@ -63,11 +63,41 @@ session-expiry: Sessions expire after 30 days of inactivity.
 |------|---------|
 | `session-expiry` | Slug — permanent, globally unique. Used in `spec:` backlinks in code. |
 | Statement | What the system does. Current state only. |
-| `>` | Provenance — why this exists. User's words where possible. |
+| `>` | Provenance — use source prefix: user, inferred, code, regulatory, derived. See Provenance source types below. |
 | `!` | Agent filled this in; user has not confirmed it. |
 | `@` | This entry depends on another slug. |
 | `~` | Code implementing this entry. One line per ref. |
 | `[planned]` | Not yet implemented. No `~` lines. Remove when implemented. |
+
+### Provenance source types
+
+Every `>` line must identify where the entry came from. Use exactly one of these — do not invent new types.
+
+| Type | Format | When used | `!` required? |
+|------|--------|-----------|---------------|
+| user | `> user: "exact words"` | Direct quote from user | No |
+| inferred | `> inferred: reasoning` | Agent interpretation of user intent | Yes |
+| code | `> code: path — context` | Discovered during sync, drift, reverse-engineering | Yes |
+| regulatory | `> regulatory: source — citation` | Legal, compliance, platform requirement | No |
+| derived | `> derived: slug — reasoning` | Logical consequence of another entry | No |
+
+For Q nodes: `> blocks: slug` remains valid.
+
+Examples:
+
+```
+> user: "we'll just do Google login for now"
+
+> inferred: user said "nothing crazy" for timeout — interpreted as 30 days
+! assumed 30 days — not confirmed
+
+> code: src/auth/google.py — phantom slug, prov sync 2026-03-10
+! statement inferred from implementation — user confirmed after sync
+
+> regulatory: GDPR Article 17 — right to erasure within 30 days
+
+> derived: C:jwt-stateless — stateless tokens can't maintain server-side revocation list
+```
 
 ### Node types at column 0
 
@@ -88,8 +118,8 @@ Sub-lines always 2-space indent. Never 4 or tab.
 
 ```
 slug: Statement describing user-observable behavior. [planned if not yet coded]
-  > "user's words" or inferred from: reasoning
-  ! assumption (only when agent filled a gap the user did not specify)
+  > user: "exact quote" | inferred: reasoning | code: path — context | regulatory: source — citation | derived: slug — reasoning
+  ! assumption (required for inferred and code; only when agent filled a gap)
   @ dependency-slug (if this entry depends on another slug)
   ? Q:blocking-question (if blocked by an open question)
   ~ src/path/to/file.py:line (one per line, only when implemented)
@@ -99,7 +129,7 @@ slug: Statement describing user-observable behavior. [planned if not yet coded]
 
 ```
 C:slug: Non-negotiable rule statement.
-  > "user's words" or regulatory requirement
+  > user: "exact quote" or regulatory: source — citation
 ```
 
 ### Open question format
@@ -128,27 +158,27 @@ Violating these breaks the parser and grep-based retrieval.
 ## Constraints
 
 C:oauth-only: OAuth only — no email/password.
-  > "I don't want to deal with password resets"
+  > user: "I don't want to deal with password resets"
 
 C:jwt-stateless: Sessions are stateless JWT — no server-side session store.
-  > "I don't want to manage session infrastructure"
+  > user: "I don't want to manage session infrastructure"
 
 ## Requirements
 
 google-login: Users authenticate via Google OAuth.
-  > "we'll just do Google login for now"
+  > user: "we'll just do Google login for now"
   @ C:oauth-only
   ~ src/api/auth/google.py
   ~ src/api/auth/callback.py
 
 session-expiry: Sessions expire after 30 days of inactivity.
-  > "standard session timeout, nothing crazy"
+  > inferred: user said "standard session timeout, nothing crazy" — interpreted as 30 days
   ! assumed 30 days — "nothing crazy" is unconfirmed
   @ C:jwt-stateless
   ~ src/middleware/session.py:44
 
 admin-revoke: Admins can revoke any user session immediately. [planned]
-  > "need a kill switch for bad actors"
+  > user: "need a kill switch for bad actors"
   ! assumed token blocklist approach — not stated by user
   @ session-expiry
   ? Q:admin-revoke-scope
@@ -263,7 +293,7 @@ prov init                # scaffold CONTEXT.md
 
 | If this happens | Do this |
 |-----------------|--------|
-| `prov validate` reports "ghost-scope" or "no > line" | Add a `  > ` line to the offending entry (user quote or `inferred from: ...`). Do not commit without it. |
+| `prov validate` reports "ghost-scope" or "no > line" | Add a `  > ` line with appropriate source prefix (user, inferred, code, regulatory, derived). Do not commit without it. |
 | `prov validate` reports "dead-ref" | Remove the `~` line or update the path to the real file. Do not leave a `~` pointing to a missing path. |
 | `prov validate` reports "phantom-slug" | Either add the missing spec entry for that slug or remove the `spec: slug` backlink from code. Do not leave a backlink with no entry. |
 | You accidentally used 4 spaces or tab for sub-lines | Change to exactly 2 spaces. Parser and grep rely on 2-space indent. |

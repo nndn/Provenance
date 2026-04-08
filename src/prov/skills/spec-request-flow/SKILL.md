@@ -51,7 +51,7 @@ Before touching any file:
 ### Step 4 — Write the spec (Phase 4)
 
 1. Run `grep -r "^<slug>:" spec/` or `prov check-slug <slug>` to verify slug availability.
-2. Edit the correct domain `.md` file(s): new entries in the right section; unimplemented entries get `[planned]`; every `!` from Phase 3 as a `  ! assumption text` sub-line; **every entry has a `  > provenance` line. No exceptions.**
+2. Edit the correct domain `.md` file(s): new entries in the right section; unimplemented entries get `[planned]`; every `!` from Phase 3 as a `  ! assumption text` sub-line; **every entry has a `  > provenance` line with source prefix (user, inferred, code, regulatory, derived) per spec-entry-format. No exceptions.**
 3. Run `prov validate` — fix until zero errors. Run `prov diff` and show the user. Surface any remaining `!` lines for confirmation before Step 5.
 
 ### Step 5 — Implement (Phase 5)
@@ -135,7 +135,7 @@ Wait for the user to choose before proceeding.
 - New entries go in the correct domain file under the correct section (## Constraints, ## Requirements, ## Open Questions).
 - Entries not yet implemented get `[planned]`.
 - Every `!` assumption from Phase 3 appears as a `  ! assumption text` sub-line.
-- Every entry has a `  > provenance` line. No exceptions.
+- Every entry has a `  > provenance` line with source prefix (user, inferred, code, regulatory, derived) per spec-entry-format. No exceptions.
 
 ### Phase 6 — Drift fixes
 
