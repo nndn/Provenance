@@ -103,3 +103,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Unknown command: {cmd}")
         return 1
     return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

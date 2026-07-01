@@ -10,20 +10,20 @@ C:python-39-min: prov requires Python 3.9+ standard library only; no external de
 
 ## Requirements
 
-install-pipx: Users can install prov via pipx for isolated global install. Command: `pipx install provenance-cli` (PyPI) or `pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'` (GitHub).
+install-pipx: New projects install prov as a global CLI with pipx. Command: `pipx install provenance-cli` (PyPI) or `pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'` (GitHub); project setup then runs `prov init` from the project root.
 
-> "pipx isolates the CLI so it doesn't conflict with project dependencies."
+> "pipx isolates the CLI so it doesn't conflict with project dependencies. Global prov is the primary supported path for new projects."
 > ~ src/prov/spec_io.py
 > ~ pyproject.toml
 
-install-pip: Users can install prov via pip into a virtualenv or system. Command: `pip install provenance-cli` or `pip install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'`.
+install-pip: Users can install prov via pip into a virtualenv when pipx is unavailable. Command: `pip install provenance-cli` or `pip install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'`.
 
 > "pip works for users who manage dependencies with pip/venv."
 > ~ pyproject.toml
 
-install-project-local: Users can copy prov into a project via `install.sh`; creates `prov/prov.py` and `prov/CONTEXT.md`. Run with `python prov/prov.py <command>`.
+project-bootstrap: Users can optionally run `install.sh` after installing the global CLI; it creates `prov/CONTEXT.md`, `AGENTS.md`, `.agents/skills/`, and the pre-commit hook when the target is a Git repo. New projects run the global `prov` command.
 
-> "Some users prefer to ship prov with the project; no global install."
+> "install.sh bootstraps repo-local spec and agent files; the CLI itself is the installed prov command."
 > ~ install.sh
 
 spec-dir-resolution: prov resolves the spec directory in order: (1) `$SPEC_DIR` env var; (2) entry script's parent if it contains CONTEXT.md or .md files; (3) search upward from cwd for `prov/`, `spec/`, or `specs/` containing CONTEXT.md or .md files; (4) default `cwd/prov` for `prov init`.
@@ -57,9 +57,9 @@ install-pipx-local: Contributors can install the current local build into pipx v
 > "Local dev: test CLI changes without publishing to PyPI."
 > ~ scripts/install-pipx-local.sh
 
-pre-commit-spec-validate: Projects can install a pre-commit hook via `scripts/install-spec-pre-commit.sh` that runs prov validate when files under prov/, spec/, or specs/ change; prevents committing with invalid spec.
+pre-commit-spec-validate: Projects can install a pre-commit hook via `scripts/install-spec-pre-commit.sh` that runs `prov validate` when staged spec markdown changes or staged `spec:` backlink changes are present; prevents committing invalid spec/code backlinks. The hook does not rebuild or stage `.spec/` by default.
 
-> "Validate on commit so spec and code stay consistent."
+> "Validate staged spec markdown and staged spec: backlink changes on commit; do not rebuild or git add .spec by default."
 > ~ scripts/install-spec-pre-commit.sh
 
 ## Out of scope

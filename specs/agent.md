@@ -20,9 +20,9 @@ C:spec-code-same-commit: One commit contains both the spec change and the code c
 
 > "One commit contains both the spec change and the code change. Never split them."
 
-C:no-direct-cache-write: The agent never writes to .spec/ directly; the cache is machine-generated from the markdown files; CLI and pre-commit hook manage it.
+C:no-direct-cache-write: The agent never writes to `.spec/` directly. `.spec/` is a generated optional cache from markdown files; only explicit cache commands such as `prov rebuild` write it, and agents do not stage it unless the user asks.
 
-> "Never write to .spec/ directly. The .spec/ directory is machine-generated from the markdown files."
+> "Never write to .spec/ directly. The .spec/ directory is generated from markdown files and is optional."
 
 ## Requirements
 
@@ -68,11 +68,11 @@ contradiction-surfacing: Before touching spec or code, if the request contradict
 > "If the request contradicts an existing entry, stop and surface the contradiction with options."
 > [planned]
 
-pre-commit-hook: Pre-commit hook: when specs/ (or spec/) files are staged, run prov validate (exit 1 on errors), then rebuild cache and git add .spec/.
+pre-commit-hook: Pre-commit hook: when staged spec markdown under prov/, spec/, or specs/ changes, or staged code changes add/remove `spec:` backlinks, run `prov validate` (exit 1 on errors). The hook does not rebuild or stage `.spec/` by default.
 
-> "If git diff --cached includes spec files, run prov validate; on success run rebuild and git add .spec/."
+> "If staged changes include spec markdown or spec: backlink changes, run prov validate. Do not rebuild or git add .spec by default."
 > @ spec-validate
-> @ cache-committed
+> @ cache-generated-optional
 > [planned]
 
 drift-reconciliation: prov reconcile <path> or --since <ref> surfaces phantom slugs, silent implementation, dead refs; output includes resolution hints. After autonomous code changes, run reconcile, validate, diff and include in PR description.

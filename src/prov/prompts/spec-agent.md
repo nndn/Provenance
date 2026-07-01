@@ -29,7 +29,7 @@ These apply in every session without exception.
 3. **Every entry needs a `>` line.** No entry exists without provenance. Use a source prefix: `user:`, `inferred:`, `code:`, `regulatory:`, `derived`. Quote the user where possible (`> user: "..."`). For agent interpretation use `> inferred:` with `!`. For code-derived use `> code:` with `!`. See spec-entry-format skill.
 4. **Spec and code in the same commit.** Never split them.
 5. **No evolutionary language.** The spec is always current. Never write "previously", "changed from", "deprecated". Git records history; the spec records intent.
-6. **Never write to `.spec/`.** The cache is machine-generated. The pre-commit hook manages it.
+6. **Never write to `.spec/`.** It is a generated optional cache from markdown. Only run `prov rebuild` when explicitly asked to refresh it.
 7. **Validate before every commit.** `prov validate` — zero errors is the only acceptable state.
 8. **Spec before code.** Never write code without proposing the spec change and getting confirmation first.
 9. **Capture expectations.** When a task reveals an expectation not in the spec, add or update an entry. Do not leave expectations only in code or conversation.
@@ -522,7 +522,7 @@ prov validate            # run before every commit
 prov diff [ref]          # semantic change manifest for human review
 prov reconcile <path>    # detect code↔spec drift (read-only)
 prov sync [path]         # interactive drift resolution
-prov rebuild             # rebuild cache from files
+prov rebuild             # regenerate optional .spec/ cache from files
 prov init                # scaffold CONTEXT.md (new project)
 ```
 

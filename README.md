@@ -10,9 +10,9 @@
 
 **Requirements:** Python 3.9+
 
-### Install the `prov` CLI (recommended)
+### Install the `prov` CLI
 
-Install from PyPI (after release) or GitHub:
+The primary supported path for new projects is a global `prov` command installed with `pipx`.
 
 | Platform | Command |
 |----------|---------|
@@ -31,7 +31,15 @@ Install from PyPI (after release) or GitHub:
 pipx install provenance-cli    # from PyPI (recommended)
 # or, before release:
 pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git'
-prov --help
+prov
+```
+
+Then initialize specs in a project:
+
+```sh
+cd /path/to/your-project
+prov init
+prov orient
 ```
 
 To install a specific version:
@@ -41,9 +49,9 @@ pipx install 'provenance-cli==0.1.0'   # from PyPI
 pipx install 'provenance-cli @ git+https://github.com/nndn/Provenance.git@v0.1.0'   # from GitHub
 ```
 
-### Install into a project (copy prov into your repo)
+### Optional project bootstrap
 
-If you prefer to copy the CLI into your project instead of a global install:
+After installing the global CLI, you can bootstrap a repository with the spec scaffold, agent instructions, skills, and pre-commit hook:
 
 ```sh
 git clone https://github.com/nndn/Provenance.git /tmp/provenance
@@ -51,10 +59,10 @@ cd /path/to/your-project
 sh /tmp/provenance/install.sh
 ```
 
-This creates `prov/prov.py` and `prov/CONTEXT.md` in your project. Run with:
+This creates `prov/CONTEXT.md`, `AGENTS.md`, `.agents/skills/`, and the pre-commit hook when the target is a Git repo. Run with:
 
 ```sh
-python prov/prov.py orient
+prov orient
 ```
 
 ---
@@ -93,31 +101,30 @@ twine upload dist/*
 
 | File | Purpose |
 |---|---|
-| `prov/prov.py` | CLI — scope, context, impact, validate, diff, write, reconcile |
-| `agent.md` | Agent rules — drop into Cursor, Claude, or any agent config |
-| `scripts/install-spec-pre-commit.sh` | Git hook — validates spec on every commit |
+| `prov` | Global CLI — scope, context, impact, validate, diff, write, reconcile |
+| `prov/CONTEXT.md` | Project spec root — purpose, constraints, and domain map |
+| `AGENTS.md` | Agent rules installed by `install.sh` for Codex/GPT-style agents |
+| `.agents/skills/` | Agent skill instructions installed by `install.sh` |
+| `scripts/install-spec-pre-commit.sh` | Optional Git hook — validates relevant staged changes |
 
 No external dependencies. Python 3.9+. Everything is plain text — grep always works.
 
-**Repo structure (for contributors):** CLI source lives in `src/prov.py`. This repo's own spec (meta) is in `specs/`. After install, user projects get `prov/prov.py` (copied from `src/prov.py`) and use `prov/` for their spec files. To run the CLI from this repo: `SPEC_DIR=specs python src/prov.py <command>`. For local dev with pipx: `sh scripts/install-pipx-local.sh` — installs current build into pipx so `prov` uses your edits.
+**Repo structure (for contributors):** CLI source lives in `src/prov/`, with a compatibility shim at `src/prov.py`. This repo's own spec (meta) is in `specs/`. User projects normally keep spec files in `prov/` and run the globally installed `prov`. For local dev with pipx: `sh scripts/install-pipx-local.sh` — installs current build into pipx so `prov` uses your edits.
 
 ---
 
 ## Quick start
 
 ```sh
-# Option A: Install CLI globally (from GitHub)
+# Install CLI globally
 pipx install provenance-cli
 
-# Option B: Install into your project
-git clone https://github.com/nndn/Provenance.git /tmp/provenance
+# Initialize specs in your project
 cd /path/to/your-project
-sh /tmp/provenance/install.sh
+prov init
 
-# Then: edit prov/CONTEXT.md (or prov/CONTEXT.md) and run
-prov orient                    # if installed globally
-# or
-python prov/prov.py orient     # if using project-local copy
+# Then edit prov/CONTEXT.md and run
+prov orient
 ```
 
 After install:
@@ -126,15 +133,16 @@ After install:
 your-project/
   prov/
     CONTEXT.md    ← edit this: project name, purpose, domain map
-    prov.py       ← the CLI
-  agent.md        ← copy to your AI agent config
+    <domain>.md   ← domain specs as you add them
 ```
+
+If you use the optional project bootstrap, it also creates `AGENTS.md`, `.agents/skills/`, and the pre-commit hook when the target is a Git repo.
 
 ---
 
 ## Set up your AI agent
 
-Copy `agent.md` to wherever your agent reads rules:
+`install.sh` creates `AGENTS.md` for Codex/GPT-style agents and `.agents/skills/` for skill-aware agents. For other tools, copy or append `AGENTS.md` wherever the tool reads project instructions:
 
 | Agent | Location |
 |---|---|
@@ -143,13 +151,13 @@ Copy `agent.md` to wherever your agent reads rules:
 | Codex / GPT | `AGENTS.md` |
 | Any | append to your existing rules file |
 
-Once the agent reads `agent.md`, it will automatically call `prov scope` before touching code, `prov validate` before committing, and `prov diff` for human review.
+Once the agent reads `AGENTS.md`, it will call `prov scope` before touching code, `prov validate` before committing, and `prov diff` for human review.
 
 ---
 
 ## CLI
 
-Run `prov <command>` (if installed globally) or `python prov/prov.py <command>` (project-local).
+Run `prov <command>`.
 
 ```sh
 prov orient                    # start every session here
@@ -167,7 +175,7 @@ prov write                     # add entries (JSON input, validates before writi
 prov validate                  # run before every commit — zero errors only
 prov diff [ref]                # semantic change manifest vs HEAD or any ref
 prov reconcile <path>          # detect code↔spec drift
-prov rebuild                   # rebuild .spec/ cache from files
+prov rebuild                   # regenerate optional .spec/ cache from files
 
 prov init                      # scaffold CONTEXT.md in a new project
 ```
@@ -276,10 +284,11 @@ async function revokeSession(userId: string): Promise<void>
 ./scripts/install-spec-pre-commit.sh
 ```
 
-When spec files are staged, the hook:
-1. Runs `prov validate` — blocks commit on any error
-2. Runs `prov rebuild` — regenerates `.spec/` cache
-3. Stages `.spec/` automatically
+When relevant changes are staged, the hook:
+1. Detects staged spec markdown changes and staged `spec:` backlink changes
+2. Runs `prov validate` — blocks commit on any error
+
+The hook does not rebuild or stage `.spec/` by default. `.spec/` is a generated, optional cache; run `prov rebuild` explicitly when you want to refresh it.
 
 ---
 
@@ -290,7 +299,7 @@ When spec files are staged, the hook:
    ```
    auth  prov/auth.md
    ```
-3. Run `python prov/prov.py orient` to verify it loads
+3. Run `prov orient` to verify it loads
 
 ---
 
@@ -308,12 +317,12 @@ echo '{
     "provenance": "\"I need a forgot password flow\"",
     "planned": true
   }]
-}' | python prov/prov.py write --yes
+}' | prov write --yes
 ```
 
 ### Directly in markdown
 
-Edit the domain file. Follow the format above. Run `python prov/prov.py validate` when done.
+Edit the domain file. Follow the format above. Run `prov validate` when done.
 
 ---
 

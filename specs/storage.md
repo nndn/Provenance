@@ -27,15 +27,15 @@ file-backend: FileQueryBackend parses markdown files on every call; zero infrast
 > @ C:two-space-indent
 > [planned]
 
-json-cache-backend: JsonCacheBackend wraps FileQueryBackend; serializes graph to .spec/graph.json and code index to .spec/code-index.json; checks file mtimes and transparently rebuilds when stale. Powers prov scope (O(1) code-index), prov impact (graph traversal), prov orient (domain summaries).
+json-cache-backend: JsonCacheBackend wraps FileQueryBackend; serializes graph to `.spec/graph.json` and code index to `.spec/code-index.json` when explicitly generated. The cache is an optimization for commands such as scope, impact, and orient; markdown remains canonical.
 
-> "JsonCacheBackend (phase 2, committed to repo). Serializes the parsed graph to .spec/graph.json and the code-path reverse index to .spec/code-index.json."
+> "JsonCacheBackend serializes the parsed graph to .spec/graph.json and the code-path reverse index to .spec/code-index.json when generated."
 > @ file-backend
 > [planned]
 
-cache-committed: The .spec/ cache files are committed to the repository. Their git diff in a PR is machine-readable record of spec changes; CI can fail fast on stale cache; fresh clone has up-to-date index without build step.
+cache-generated-optional: The `.spec/` cache is generated and optional. It is not the source of truth, is not required by `prov validate`, and is not rebuilt or staged by the pre-commit hook by default. It may be deleted and regenerated with `prov rebuild`.
 
-> "The cache files are committed to the repository. A fresh clone already has an up-to-date index; no build step needed."
+> "The .spec cache is generated from markdown files. Validate must not depend on it, and pre-commit must not rebuild or stage it by default."
 > @ json-cache-backend
 > [planned]
 
@@ -56,14 +56,14 @@ file-writer-separate: Mutation is only through the file writer. Spec write write
 > @ C:backend-readonly
 > [planned]
 
-rebuild-from-files: Any backend can be deleted and rebuilt from the spec files; spec.py rebuild regenerates cache in seconds; no data at risk.
+rebuild-from-files: Any backend cache can be deleted and rebuilt from spec markdown files; `prov rebuild` regenerates `.spec/` in seconds; no data is at risk.
 
-> "Any backend can be deleted and rebuilt. If the cache is stale, corrupt, or absent, python specs/spec.py rebuild regenerates it from the files in seconds."
+> "Any generated backend cache can be deleted and rebuilt. If .spec is stale, corrupt, or absent, prov rebuild regenerates it from markdown files."
 > [planned]
 
 ## Out of scope
 
-Writing directly to .spec/ or any backend. Backends as source of truth. Required external database for small specs.
+Writing directly to .spec/ or any backend. Backends as source of truth. Required external database for small specs. Requiring `.spec/` to be committed as a review artifact.
 
 ## Refs
 

@@ -283,7 +283,7 @@ prov validate            # before every commit
 prov diff [ref]          # semantic change manifest
 prov reconcile <path>    # drift detection (read-only)
 prov sync [path]         # interactive drift resolution
-prov rebuild             # rebuild cache
+prov rebuild             # regenerate optional .spec/ cache
 prov init                # scaffold CONTEXT.md
 ```
 

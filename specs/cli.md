@@ -51,9 +51,9 @@ spec-domain: prov domain <name> — full domain load for editing; output: domain
 > "Maintain-mode agent loading a full domain to edit, review, or understand completely."
 > [planned]
 
-spec-validate: prov validate — before every commit; non-zero exit on errors. Checks: dead-ref, phantom-slug, duplicate-slug, dependency-cycle, ghost-scope (ERROR); silent-impl, orphan-question, orphan-entry (WARN); unconfirmed-assumption (INFO). Output: ERRORS, WARNINGS, UNCONFIRMED ASSUMPTIONS, CLEAN, Result. Exit 0 only when zero errors.
+spec-validate: prov validate — before every commit; non-zero exit on errors; reads canonical markdown and code backlinks directly and does not depend on `.spec/`. Checks: dead-ref, phantom-slug, duplicate-slug, dependency-cycle, ghost-scope (ERROR); silent-impl, orphan-question, orphan-entry (WARN); unconfirmed-assumption (INFO). Output: ERRORS, WARNINGS, UNCONFIRMED ASSUMPTIONS, CLEAN, Result. Exit 0 only when zero errors.
 
-> "Before every commit. Non-zero exit code if any errors are found. Exit code 0 only when zero errors."
+> "Before every commit. Non-zero exit code if any errors are found. Exit code 0 only when zero errors. Validate must not require a generated .spec cache."
 > [planned]
 
 spec-diff: prov diff [ref] — after writing/modifying specs; default ref HEAD. Output: semantic change manifest — IMPLEMENTED, NEW ENTRIES, MODIFIED, RESOLVED QUESTIONS, REMOVED ENTRIES, CONSTRAINTS CHANGED; assumptions requiring confirmation.
@@ -82,9 +82,9 @@ spec-check-slug: prov check-slug <slug> — before writing new entry; output: TA
 > "Before writing any new entry, to verify the slug is available."
 > [planned]
 
-rebuild-command: spec rebuild (or equivalent) regenerates cache from spec files when stale, corrupt, or absent.
+rebuild-command: prov rebuild regenerates the optional `.spec/` cache from spec markdown files when explicitly requested; validate and the default pre-commit hook do not require it.
 
-> "python prov/prov.py rebuild regenerates it from the files in seconds."
+> "prov rebuild regenerates .spec from markdown files when the user wants the optional cache."
 > @ rebuild-from-files
   ~ src/prov.py:809
 

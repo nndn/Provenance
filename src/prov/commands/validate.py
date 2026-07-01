@@ -44,7 +44,7 @@ def cmd_validate(spec_dir: Path, repo_root: Path) -> int:
                     f"no-dangling-block:  ? {b}  target not found for {n.slug}"
                 )
 
-    slug_re = re.compile(r"^[a-z][a-z0-9\-]*\-[a-z0-9\-]+$")
+    slug_re = re.compile(r"^(?:[CQ]:)?[a-z][a-z0-9\-]*\-[a-z0-9\-]+$")
     code_refs = grep_spec_in_code(repo_root, repo_root)
     for fpath, line, slug in code_refs:
         if not slug_re.match(slug):

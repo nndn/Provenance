@@ -7,6 +7,20 @@ from pathlib import Path
 from prov.model import Edge, Node
 
 
+_SPEC_COMMENT_RE = re.compile(r"(?:^|[#/*])\s*spec:\s*([^#/*\n]*)", re.I)
+_SPEC_BACKLINK_TOKEN_RE = re.compile(
+    r"^(?:[CQ]:)?[a-z][a-z0-9]*(?:-[a-z0-9]+)+$"
+)
+
+
+def _parse_spec_backlink_token(token: str) -> str | None:
+    """Return a valid spec backlink token with surrounding punctuation removed."""
+    token = token.strip().strip("`'\"").rstrip(".,;")
+    if not token or not _SPEC_BACKLINK_TOKEN_RE.match(token):
+        return None
+    return token
+
+
 def slug_to_full(slug: str, nodes_by_slug: dict[str, Node]) -> str:
     if slug in nodes_by_slug:
         return slug
@@ -79,8 +93,6 @@ def grep_spec_in_code(
 ) -> list[tuple[str, int, str]]:
     """Returns (file, line_no, slug) for spec: backlink comments in code. Excludes .md files."""
     results: list[tuple[str, int, str]] = []
-    spec_re = re.compile(r"(?:^|[#/*\s])spec:\s*([a-z][a-z0-9\-,\s]*)", re.I)
-    slug_re = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)+$")
     _skip_dirs = {
         ".git",
         ".spec",
@@ -96,10 +108,26 @@ def grep_spec_in_code(
         ".agents",  # agent skill/workflow documentation — not code
     }
     # Agent config files at repo root that contain spec: examples in documentation
-    _skip_filenames = {".cursorrules", "agent.md", "GEMINI.md", "CLAUDE.md", "AGENTS.md"}
+    _skip_filenames = {
+        ".cursorrules",
+        "AGENTS",
+        "AGENTS.md",
+        "CLAUDE",
+        "CLAUDE.md",
+        "GEMINI",
+        "GEMINI.md",
+        "agent.md",
+    }
+
+    def should_skip_file(path: Path) -> bool:
+        if any(part in _skip_dirs or part.endswith(".egg-info") for part in path.parts):
+            return True
+        if path.name in _skip_filenames:
+            return True
+        return path.suffix.lower() == ".md"
 
     if path_or_dir.is_file():
-        files = [path_or_dir] if path_or_dir.suffix.lower() != ".md" else []
+        files = [] if should_skip_file(path_or_dir) else [path_or_dir]
     else:
         files = []
         try:
@@ -109,18 +137,12 @@ def grep_spec_in_code(
         for f in all_entries:
             # Skip entries whose path contains a skip dir (check before is_file to avoid
             # PermissionError on broken symlinks inside node_modules etc.)
-            if any(
-                part in _skip_dirs or part.endswith(".egg-info") for part in f.parts
-            ):
-                continue
-            if f.name in _skip_filenames:
+            if should_skip_file(f):
                 continue
             try:
                 if not f.is_file():
                     continue
             except (PermissionError, OSError):
-                continue
-            if f.suffix.lower() == ".md":
                 continue
             files.append(f)
 
@@ -131,9 +153,9 @@ def grep_spec_in_code(
             continue
         rel = str(f.relative_to(repo_root)) if f.is_relative_to(repo_root) else str(f)
         for i, line in enumerate(text.splitlines(), 1):
-            for m in spec_re.finditer(line):
+            for m in _SPEC_COMMENT_RE.finditer(line):
                 for part in m.group(1).replace(",", " ").split():
-                    slug = part.strip().rstrip(".")
-                    if slug and slug_re.match(slug):
+                    slug = _parse_spec_backlink_token(part)
+                    if slug:
                         results.append((rel, i, slug))
     return results
