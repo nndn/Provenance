@@ -9,6 +9,7 @@ from prov.spec_io import load_backend
 from prov.writer import insert_entry_into_file, node_to_markdown, section_for_type
 
 
+# spec: spec-write
 def cmd_write(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     autonous = "--yes" in args or "-y" in args
     rest = [a for a in args if a not in ("--yes", "-y")]

@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "provenance-cli"
-version = "0.1.0"
+version = "0.2.0"
 description = "Living requirements index + CLI for spec-driven development"
 readme = "README.md"
 license = { text = "MIT" }
@@ -25,7 +25,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development",
 ]
-dependencies = []
+dependencies = ["typer>=0.12"]
 
 [project.scripts]
 prov = "prov.cli:main"
@@ -34,5 +34,10 @@ prov = "prov.cli:main"
 Homepage = "https://github.com/nndn/Provenance"
 Repository = "https://github.com/nndn/Provenance"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/prov"]
+# Non-Python agent assets (prov/skills/**/SKILL.md, prov/rules/*.md,
+# prov/prompts/*.md) are package-dir files, included by hatchling by default.

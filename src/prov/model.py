@@ -8,6 +8,7 @@ NodeType = Literal["requirement", "constraint", "question"]
 EdgeType = Literal["depends-on", "implements", "blocked-by"]
 
 
+# spec: data-model, property-graph
 @dataclass
 class Node:
     slug: str

@@ -5,6 +5,7 @@ from prov.indexing import grep_spec_in_code, nodes_by_slug
 from prov.spec_io import load_backend
 
 
+# spec: spec-reconcile, drift-reconciliation
 def cmd_reconcile(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
     nodes, _, _, _, _ = load_backend(spec_dir)
     nodes_by_slug_map = nodes_by_slug(nodes)

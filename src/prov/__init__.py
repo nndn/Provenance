@@ -1,4 +1,4 @@
-"""Provenance CLI — spec-driven development. Python 3.9+ stdlib only."""
+"""Provenance CLI — spec-driven development."""
 
 __all__ = ["main"]
 

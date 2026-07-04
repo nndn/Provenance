@@ -1,0 +1,1977 @@
+{
+  "generated": "2026-07-04T04:48:07.419124Z",
+  "spec_files": [
+    "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+    "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+    "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+    "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+    "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+    "/Users/nandan/Desktop/Dev/Provenance/prov/install.md"
+  ],
+  "nodes": {
+    "C:no-history": {
+      "type": "constraint",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "The spec never records how things changed, what was considered, or what was rejected. Git records history; the spec records intent.",
+      "planned": false,
+      "provenance": "user: \"The spec is always current. A well-maintained spec is indistinguishable from one written in a single session.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:no-evolutionary-language": {
+      "type": "constraint",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "The spec never contains \"Previously this was...\", \"Changed from X to Y\", \"Deprecated\", or decision rationale prose. Declarative mutation only \u2014 rewrite in place, delete when removed.",
+      "planned": false,
+      "provenance": "user: \"No tombstones, no deprecated markers. The feature is gone; the spec reflects that.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "living-index": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "The spec is a living requirements index maintained alongside the codebase; it answers what the system does and why at any point in time.",
+      "planned": false,
+      "provenance": "user: \"The spec is a living requirements index maintained alongside the codebase.\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/architecture.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "rebuilding-test": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "A fresh agent given only the spec and no prior context must be able to build a system that satisfies all user expectations; user-observable behavior would match.",
+      "planned": false,
+      "provenance": "user: \"Could a fresh agent, given only the spec and no prior context, build a system that satisfies all user expectations?\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/architecture.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "inclusion-test": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "Four questions govern what belongs in the spec: (1) user explicitly stated \u2192 in spec; (2) competent developer default \u2192 skip; (3) choice between reasonable options \u2192 in spec; (4) derivable from existing entries \u2192 do not duplicate.",
+      "planned": false,
+      "provenance": "user: \"The inclusion test \u2014 ask these four questions in order\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/architecture.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "property-graph": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "The spec is a property graph (literally): node types Requirements, Constraints, Questions, Domains; edge types depends-on, implements, blocked-by, belongs-to; computable from plain text.",
+      "planned": false,
+      "provenance": "user: \"The spec is a property graph. Not metaphorically \u2014 literally.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/model.py",
+        "src/prov/indexing.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "single-hop-grep": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "Single-hop queries (find entry by slug, all entries of a type, direct dependents, code implementing an entry) are covered by grep; no tooling required.",
+      "planned": false,
+      "provenance": "user: \"Single-hop (grep covers these): Find entry by slug, find all entries of a type, find direct dependents, find what code implements an entry.\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/spec-format.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "multi-hop-cli": {
+      "type": "requirement",
+      "domain": "core",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/core.md",
+      "statement": "Multi-hop queries (blast radius, transitive dependency chains, domain coupling, blocked work, orphan detection) are covered by the CLI using an in-memory graph parsed from files.",
+      "planned": false,
+      "provenance": "user: \"Multi-hop (CLI covers these): Full blast radius of a change, transitive dependency chains, domain coupling analysis, blocked work analysis, orphan detection.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/impact.py",
+        "src/prov/commands/orient.py"
+      ],
+      "depends_on": [
+        "property-graph"
+      ],
+      "blocked_by": []
+    },
+    "C:column-zero": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Every primary entry starts at column 0. Violating this breaks grep-based retrieval and the file parser.",
+      "planned": false,
+      "provenance": "user: \"Every primary entry starts at column 0\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:two-space-indent": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Every sub-line is indented exactly 2 spaces. Violating this breaks grep-based retrieval and the file parser.",
+      "planned": false,
+      "provenance": "user: \"Every sub-line is indented exactly 2 spaces\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:slug-unique": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Slugs are globally unique across the entire spec tree. Check with prov check-slug or grep before writing.",
+      "planned": false,
+      "provenance": "user: \"Slugs are globally unique across the entire specs/ tree\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:slug-permanent": {
+      "type": "constraint",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Once written and referenced in code, a slug does not change; the slug is a stable handle, not a description.",
+      "planned": false,
+      "provenance": "user: \"Slugs are permanent. Rename cost is high \u2014 choose carefully upfront.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "requirement-node": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Requirement entries use bare slug at column 0, statement, optional planned marker; sub-lines > provenance, ! assumption, ~ code-ref, @ depends-on, ? blocked-by.",
+      "planned": false,
+      "provenance": "user: \"Requirements \u2014 observable behaviors the user expects. Use bare slug:.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "constraint-node": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Constraint entries use C:slug: prefix at column 0, statement; sub-lines > provenance, optional ! and ~; never planned \u2014 constraints are active or they don't exist; referenced from requirements via @ C:slug.",
+      "planned": false,
+      "provenance": "user: \"Constraints \u2014 non-negotiable rules that govern all requirements in the domain. Use C:slug: prefix.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "question-node": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Open-question entries use Q:slug: prefix at column 0, question statement; sub-line > what this blocks; deleted when resolved.",
+      "planned": false,
+      "provenance": "user: \"Open Questions \u2014 unresolved decisions that block implementation. Use Q:slug: prefix. Always include a > line stating what they block.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "provenance-required": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Every node has a > line (provenance). An entry with no > line is a ghost-scope error.",
+      "planned": false,
+      "provenance": "user: \"> is required on every node. No exceptions. An entry with no > line is a ghost-scope error.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "assumption-disclosure": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Whenever the agent fills a gap (number, threshold, choice, unspecified behavior), a ! line is required. \"It seemed obvious\" is not an excuse.",
+      "planned": false,
+      "provenance": "user: \"! is required whenever the agent fills a gap. Any detail the agent decided on the user's behalf gets a ! line.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/rules/spec-agent-protocol.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "code-ref-sublines": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Code refs use ~ on dedicated sub-lines (2-space indent), one per line; never inline in the entry statement.",
+      "planned": false,
+      "provenance": "user: \"~ moves to sub-lines. Never inline in the entry statement. Multiple code refs are now unambiguous.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "planned-marker": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Unimplemented requirements carry the planned marker on the statement line until implemented; then add ~ refs, remove the marker, confirm or remove ! lines in one edit.",
+      "planned": false,
+      "provenance": "user: \"[planned] marks unimplemented requirements. When a requirement is implemented: add ~ ref sub-lines, remove [planned], confirm or remove ! lines. One edit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py",
+        "src/prov/commands/sync.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "slug-format": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Slugs are kebab-case, 2\u20134 words, describing the behavior not the domain. A developer reading only spec: slug in code should understand the constraint without loading the spec.",
+      "planned": false,
+      "provenance": "user: \"Format: kebab-case, 2\u20134 words, describing the behavior not the domain. The behavior test.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/check_slug.py"
+      ],
+      "depends_on": [
+        "C:slug-unique",
+        "C:slug-permanent"
+      ],
+      "blocked_by": []
+    },
+    "domain-file": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Line 2 of every domain file is a > one-line summary (domain identity); appears in prov orient; write so an agent can decide whether to load the file.",
+      "planned": false,
+      "provenance": "user: \"Line 2 of every file is a > one-line summary. This is the domain's identity string.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "domain-split": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Split a domain into a folder when any of: more than 15 requirements in one file; a sub-domain has 5+ requirements; one section longer than rest combined; ## Refs lists 3+ distinct source subdirectories. After split: README.md as domain index, sub-domain .md files; slugs travel with content, zero reference updates.",
+      "planned": false,
+      "provenance": "user: \"Split thresholds \u2014 any one triggers a split. Slugs travel with content. IDs are never renumbered \u2014 slugs are the identity.\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/architecture.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "context-file": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "CONTEXT.md contains project name, one-line summary, purpose, user goals, hard constraints, non-goals, domain map; no requirements; establishes context before loading any domain file.",
+      "planned": false,
+      "provenance": "user: \"CONTEXT.md contains no requirements. It establishes the context every agent session needs before loading any domain file.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "out-of-scope-section": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Each domain file has ## Out of scope as a short bullet list to kill incorrect assumptions before they form; constraint on imagination, not documentation.",
+      "planned": false,
+      "provenance": "user: \"## Out of scope \u2014 short bullet list. Its purpose is to kill incorrect assumptions before they form.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/domain.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "refs-section": {
+      "type": "requirement",
+      "domain": "format",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/format.md",
+      "statement": "Each domain file has ## Refs listing primary code paths the domain owns; agents use it for impact analysis without scanning every inline ~.",
+      "planned": false,
+      "provenance": "user: \"## Refs \u2014 the primary code paths this domain owns. An agent doing impact analysis reads this section.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py",
+        "src/prov/indexing.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:files-canonical": {
+      "type": "constraint",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "Markdown files in the spec directory are the spec \u2014 the actual spec, not a representation. Every derived index is a read-acceleration layer rebuilt from those files.",
+      "planned": false,
+      "provenance": "user: \"The markdown files in specs/ are the spec. Not a representation of the spec, not a serialization format.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:backend-readonly": {
+      "type": "constraint",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "Query reads are read-only. No query path writes to any file; caches can be deleted and rebuilt from files at any time.",
+      "planned": false,
+      "provenance": "user: \"SpecQueryBackend \u2014 reads from files or an index, answers read-only queries, never modifies files.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "data-model": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "The in-memory model includes Node (slug, type, domain, file, statement, planned, provenance, assumptions, code_refs, depends_on, blocked_by), Edge (from_slug, to_slug, type), BlastRadius, ValidationReport, Context.",
+      "planned": false,
+      "provenance": "user: \"The data model \u2014 Node, Edge, BlastRadius, ValidationReport as specified in the architecture.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/model.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "file-backend": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "Every command parses the spec markdown files on each invocation; zero infrastructure, zero setup; deterministic; correct for scale up to ~200 requirements. Column-0 lines are node declarations; 2-space-indent lines are sub-lines with sigils.",
+      "planned": false,
+      "provenance": "user: \"FileQueryBackend (default, always available). Parses markdown files on every call. Zero infrastructure, zero setup.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [
+        "C:files-canonical",
+        "C:column-zero",
+        "C:two-space-indent"
+      ],
+      "blocked_by": []
+    },
+    "backend-interface": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "A SpecQueryBackend protocol defines read-only methods (get_node, get_all_nodes, edges, blast_radius, find, validate, rebuild, is_stale, and the rest) so any conforming backend can power the CLI.",
+      "planned": true,
+      "provenance": "user: \"Query backends are read-only. Any backend that implements this interface can power the CLI.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "json-cache-backend": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "prov rebuild serializes the parsed graph to `.spec/graph.json` and the code index to `.spec/code-index.json` when explicitly requested; the cache is for external consumers and inspection \u2014 CLI commands read the markdown directly and never require it.",
+      "planned": false,
+      "provenance": "user: \"JsonCacheBackend serializes the parsed graph to .spec/graph.json and the code-path reverse index to .spec/code-index.json when generated.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/rebuild.py"
+      ],
+      "depends_on": [
+        "file-backend"
+      ],
+      "blocked_by": []
+    },
+    "cache-generated-optional": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "The `.spec/` cache is generated and optional. It is not the source of truth, is not required by `prov validate`, and is not rebuilt or staged by the pre-commit hook by default. It may be deleted and regenerated with `prov rebuild`.",
+      "planned": false,
+      "provenance": "user: \"The .spec cache is generated from markdown files. Validate must not depend on it, and pre-commit must not rebuild or stage it by default.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/rebuild.py",
+        "scripts/install-spec-pre-commit.sh"
+      ],
+      "depends_on": [
+        "json-cache-backend"
+      ],
+      "blocked_by": []
+    },
+    "graphdb-backend": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "GraphDbBackend implements the same read-only interface; syncs from files on rebuild(); optional external plugin for 1000+ requirements; swap via SPEC_BACKEND=graphdb; CLI and format unchanged.",
+      "planned": true,
+      "provenance": "user: \"GraphDbBackend (phase 3, external plugin). Implements the same read-only interface. Optional; team at 50 requirements never needs it.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "backend-interface"
+      ],
+      "blocked_by": []
+    },
+    "backend-selection": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "Backend is chosen via SPEC_BACKEND env (file | json | graphdb); get_backend() returns the appropriate implementation.",
+      "planned": true,
+      "provenance": "user: \"Backend selection \u2014 get_backend() uses SPEC_BACKEND, SPEC_DIR; file, json, graphdb.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "backend-interface"
+      ],
+      "blocked_by": []
+    },
+    "file-writer-separate": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "Mutation is only through the file writer: prov write writes to markdown files, enforces column-0 and 2-space indent, and validates before writing (slug availability, dangling deps); query reads never mutate.",
+      "planned": false,
+      "provenance": "user: \"When spec write creates or modifies an entry, it writes to the markdown file. It never writes to a query backend. SpecFileWriter is a separate concern from SpecQueryBackend.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/writer.py"
+      ],
+      "depends_on": [
+        "C:backend-readonly"
+      ],
+      "blocked_by": []
+    },
+    "rebuild-from-files": {
+      "type": "requirement",
+      "domain": "storage",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/storage.md",
+      "statement": "Any generated cache can be deleted and rebuilt from spec markdown files; `prov rebuild` regenerates `.spec/` in seconds; no data is at risk.",
+      "planned": false,
+      "provenance": "user: \"Any generated backend cache can be deleted and rebuilt. If .spec is stale, corrupt, or absent, prov rebuild regenerates it from markdown files.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/rebuild.py"
+      ],
+      "depends_on": [
+        "C:files-canonical"
+      ],
+      "blocked_by": []
+    },
+    "C:minimal-deps": {
+      "type": "constraint",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "The prov CLI keeps runtime dependencies minimal \u2014 typer is the only runtime dependency; everything else is Python 3.9+ standard library.",
+      "planned": false,
+      "provenance": "user: \"Use proper libraries etc (maybe typer etc)\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:output-compat": {
+      "type": "constraint",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "Command stdout, stderr, and exit codes are user-facing behavior; refactors keep them byte-identical for existing commands, verified by golden-output diffing.",
+      "planned": false,
+      "provenance": "user: \"I've used this for a while and I know it works. So keep the functionality the same.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "cli-typer-interface": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov is a typer application: bare prov prints help, every command exposes --help, --version prints the installed package version, and completion install commands are available.",
+      "planned": false,
+      "provenance": "user: \"REview the cli and make it proper full version with all the expected commands like --help etc. Use proper libraries etc (maybe typer etc).\"",
+      "assumptions": [
+        "usage errors exit 2 and command names are case-sensitive \u2014 typer defaults accepted as deviations from 0.1, not individually confirmed"
+      ],
+      "code_refs": [
+        "src/prov/cli.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "structured-output": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "Every CLI command outputs structured plain text for direct inclusion in an agent's context window \u2014 formatted, labeled, actionable; not JSON or raw file content.",
+      "planned": false,
+      "provenance": "user: \"Every command outputs structured plain text designed for direct inclusion in an agent's context window. Not JSON. Not raw file content.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/",
+        "src/prov/format.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "backend-agnostic-output": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "CLI produces identical output regardless of which query backend (file, json, graphdb) is active.",
+      "planned": true,
+      "provenance": "user: \"The CLI produces identical output regardless of which query backend is active.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [
+        "backend-interface"
+      ],
+      "blocked_by": []
+    },
+    "spec-orient": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov orient \u2014 start of maintain-mode session; output: === SPEC ORIENT ===, project/purpose from CONTEXT, hard constraints, DOMAINS table, OPEN QUESTIONS, UNCONFIRMED ASSUMPTIONS, PLANNED, DOMAIN COUPLING, next-step hint.",
+      "planned": false,
+      "provenance": "user: \"Start of every maintain-mode session. Full product surface in a single structured package.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/orient.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-scope": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov scope <path> \u2014 before code work; input: file, directory, or file:line; output: every spec entry governing path (REQUIREMENTS, CONSTRAINTS, DEPENDED ON BY, OPEN QUESTIONS); or \"No spec entries reference this path\" with reconcile hint.",
+      "planned": false,
+      "provenance": "user: \"An agent is about to read or modify code. Called before any code work. Compact; under 400 tokens.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/scope.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-context": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov context <slug> \u2014 full context for one entry; output: type, domain, implemented|planned, file path, statement, provenance, assumptions, code refs, constraints governing domain, depends on, depended on by, blocked by.",
+      "planned": false,
+      "provenance": "user: \"Agent needs to deeply understand a single entry \u2014 before implementing, modifying, or reasoning about its behavior.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/context.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-impact": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov impact <slug> \u2014 before changing an entry or its code; output: direct dependents, transitive dependents, all code in blast radius, unconfirmed assumptions in path, planned entries in path.",
+      "planned": false,
+      "provenance": "user: \"Before modifying, deleting, or significantly changing an entry or its code. Surfaces the full blast radius.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/impact.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-find": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov find <keywords> \u2014 free-text search when slug unknown; output: ranked matches (slug, domain, type, statement) or \"No entries match\" with orient hint.",
+      "planned": false,
+      "provenance": "user: \"Agent doesn't know the slug. Searching by concept or description.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/find.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-domain": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov domain <name> \u2014 full domain load for editing; output: domain summary, file path, CONSTRAINTS, REQUIREMENTS (implemented/planned), OPEN QUESTIONS, OUT OF SCOPE.",
+      "planned": false,
+      "provenance": "user: \"Maintain-mode agent loading a full domain to edit, review, or understand completely.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/domain.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-validate": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov validate \u2014 before every commit; non-zero exit on errors; reads canonical markdown and code backlinks directly and does not depend on `.spec/`. ERROR checks: dead-ref, phantom-slug, duplicate-slug, ghost-scope, dangling @ dep, dangling ? block. WARN: orphan-question. Unconfirmed ! assumptions are listed for review. Output: ERRORS, WARNINGS, UNCONFIRMED ASSUMPTIONS, CLEAN, Result. Exit 0 only when zero errors.",
+      "planned": false,
+      "provenance": "user: \"Before every commit. Non-zero exit code if any errors are found. Exit code 0 only when zero errors. Validate must not require a generated .spec cache.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-diff": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov diff [ref] \u2014 after writing/modifying specs; default ref HEAD. Output: semantic change manifest \u2014 IMPLEMENTED, NEW ENTRIES, MODIFIED, RESOLVED QUESTIONS, REMOVED ENTRIES, CONSTRAINTS CHANGED; assumptions requiring confirmation.",
+      "planned": false,
+      "provenance": "user: \"After an agent writes or modifies specs. Produces the human review artifact.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/diff.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-write": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov write \u2014 structured input (JSON stdin or args): domain, entries (slug, type, statement, provenance, assumptions, planned, depends_on). Validates (slug available, deps exist, domain exists) then shows would-write block and Confirm; in autonomous mode agent writes and records in prov diff.",
+      "planned": false,
+      "provenance": "user: \"Agent is capturing new requirements from a user conversation or request. Takes structured input, validates before writing.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/write.py",
+        "src/prov/writer.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-reconcile": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov reconcile <path> or --since <ref> \u2014 surfaces drift: phantom slugs (spec: in code, no entry), silent impl (planned in spec but code has spec:), dead refs (~ path not found). Output: sections for each drift type, CLEAN if none.",
+      "planned": false,
+      "provenance": "user: \"Code has changed without the spec being updated. Surfaces drift between what the spec says and what the code contains.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/reconcile.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-sync": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov sync [path] \u2014 agent-facing drift report; detects phantom slugs, silent implementations, and dead refs; outputs structured plain text with resolution hints so the agent can discuss each item with the user and apply targeted fixes via patch sub-commands: mark-implemented <slug>, remove-ref <slug> <ref>, update-ref <slug> <old> <new>, remove-backlink <file> <line> <slug>; agent calls sub-commands after user confirms.",
+      "planned": false,
+      "provenance": "user: \"Check the current spec and check the code. Understand drifts, ask clarifying questions to the user, and make sure we update the spec if required or update the code if required. All this should be handled by the agent.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/sync.py"
+      ],
+      "depends_on": [
+        "spec-reconcile"
+      ],
+      "blocked_by": []
+    },
+    "spec-check-slug": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov check-slug <slug> \u2014 before writing new entry; output: TAKEN with file and entry snippet plus suggestions, or Available.",
+      "planned": false,
+      "provenance": "user: \"Before writing any new entry, to verify the slug is available.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/check_slug.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "rebuild-command": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov rebuild regenerates the optional `.spec/` cache from spec markdown files when explicitly requested; validate and the default pre-commit hook do not require it.",
+      "planned": false,
+      "provenance": "user: \"prov rebuild regenerates .spec from markdown files when the user wants the optional cache.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/rebuild.py"
+      ],
+      "depends_on": [
+        "rebuild-from-files"
+      ],
+      "blocked_by": []
+    },
+    "spec-init": {
+      "type": "requirement",
+      "domain": "cli",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/cli.md",
+      "statement": "prov init scaffolds CONTEXT.md in the spec directory (when absent) and installs the prov agent skills and rules; flags: --check (report per-file status, exit 1 if anything is missing or outdated, write nothing), --force (refresh modified skills), --no-agents / --no-claude / --no-open (skip asset classes).",
+      "planned": false,
+      "provenance": "user: \"Give ways to init a repo where you can check if relevant skills and rules/agents,md are installed if not install them (prov related skills)\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/init.py"
+      ],
+      "depends_on": [
+        "agent-assets-install"
+      ],
+      "blocked_by": []
+    },
+    "C:scope-before-code": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "The agent always calls prov scope before touching code.",
+      "planned": false,
+      "provenance": "user: \"The agent always calls prov scope before touching code.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:validate-before-commit": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "The agent always calls prov validate before committing.",
+      "planned": false,
+      "provenance": "user: \"The agent always calls prov validate before committing.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:no-silent-gaps": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Every detail the agent decides on the user's behalf (number, threshold, choice) gets a ! line; \"it seemed obvious\" is not an excuse.",
+      "planned": false,
+      "provenance": "user: \"Never silently fill a gap. Every specific detail the agent decided on the user's behalf gets a ! line.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:spec-code-same-commit": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "One commit contains both the spec change and the code change; never split them.",
+      "planned": false,
+      "provenance": "user: \"One commit contains both the spec change and the code change. Never split them.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:no-direct-cache-write": {
+      "type": "constraint",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "The agent never writes to `.spec/` directly. `.spec/` is a generated optional cache from markdown files; only explicit cache commands such as `prov rebuild` write it, and agents do not stage it unless the user asks.",
+      "planned": false,
+      "provenance": "user: \"Never write to .spec/ directly. The .spec/ directory is generated from markdown files and is optional.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "change-flow": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Every user request is handled in six ordered phases \u2014 understand (read spec and code), clarify (ask blocking questions, assume non-blocking with ! lines), propose (tell the user what will change and confirm before writing anything), write spec (edit domain files, validate, diff), implement (code with spec: backlinks), sync (prov sync, apply drift fixes, validate, diff, commit); phases must not be skipped or reordered.",
+      "planned": false,
+      "provenance": "user: \"Whenever a user asks for any new change, first we should be looking at this current spec, then looking at the references in the code if needed, and coming up with QA if necessary. First suggest an update to the spec, and the agent should tell how the system will change, what flows will change. Once the agent confirms the changes, the specs are updated and the code is updated subsequently.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/rules/spec-agent-protocol.md",
+        "src/prov/prompts/spec-agent.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "spec-backlink": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Every function, class, or logical block that implements a spec entry carries a spec: comment at the top of the block; language-agnostic; one comment per block; multiple slugs comma-separated; slugs only, no description or file paths.",
+      "planned": false,
+      "provenance": "user: \"Every function, class, or logical block that implements a spec entry carries a spec: comment. Language-agnostic, always the same format.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/indexing.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "coding-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Coding session (consume mode): (1) prov scope <file>, (2) prov context <slug> if needed, (3) prov impact <slug> before significant changes, (4) make code changes, (5) prov validate, (6) prov diff, (7) commit spec + code together.",
+      "planned": false,
+      "provenance": "user: \"Coding session (consume mode): prov scope, context, impact, make changes, validate, diff, commit together.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/rules/spec-agent-protocol.md"
+      ],
+      "depends_on": [
+        "spec-scope",
+        "spec-validate"
+      ],
+      "blocked_by": []
+    },
+    "maintain-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Maintain session: (1) prov orient, (2) prov domain <name>, (3) write or update spec entries, (4) prov validate, (5) prov diff, (6) commit.",
+      "planned": false,
+      "provenance": "user: \"Spec maintenance session (maintain mode): orient, domain, write/update, validate, diff, commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/rules/spec-agent-protocol.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "new-feature-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "New feature session: (1) prov orient, (2) prov find <keywords>, (3) prov domain <affected-domain>, (4) clarify with user, (5) prov write, (6) prov validate, (7) prov diff, (8) implement code, (9) prov validate, (10) prov diff, (11) commit spec + code together.",
+      "planned": false,
+      "provenance": "user: \"New feature session: orient, find, domain, clarify, write, validate, diff, implement, validate, diff, commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/skills/spec-request-flow/SKILL.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "debugging-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Debugging session: (1) prov scope <file-with-bug>, (2) prov context <relevant-slug>, (3) debug and fix, (4) prov validate, (5) commit if spec needed updating.",
+      "planned": false,
+      "provenance": "user: \"Debugging session: scope, context, debug and fix, validate, commit if spec updated.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/rules/spec-agent-protocol.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "assumption-confirmation": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Human review of ! assumptions: confirm (remove !), correct (rewrite statement, remove !), or defer (keep !). prov diff is the primary surface; new ! always requires human review.",
+      "planned": false,
+      "provenance": "user: \"The assumption confirmation flow. When a human sees ! assumed X in a diff, they have three options: Confirm, Correct, Defer.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/diff.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "contradiction-surfacing": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Before touching spec or code, if the request contradicts an existing entry, stop and surface: Understood, Contradiction (slug + statement), Options (Replace / Add variant / Out-of-scope reject), Question.",
+      "planned": false,
+      "provenance": "user: \"If the request contradicts an existing entry, stop and surface the contradiction with options.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/rules/spec-agent-protocol.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "pre-commit-hook": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Pre-commit hook: when staged spec markdown under prov/, spec/, or specs/ changes, or staged code changes add/remove `spec:` backlinks, run `prov validate` (exit 1 on errors). The hook does not rebuild or stage `.spec/` by default.",
+      "planned": false,
+      "provenance": "user: \"If staged changes include spec markdown or spec: backlink changes, run prov validate. Do not rebuild or git add .spec by default.\"",
+      "assumptions": [],
+      "code_refs": [
+        "scripts/install-spec-pre-commit.sh"
+      ],
+      "depends_on": [
+        "spec-validate",
+        "cache-generated-optional"
+      ],
+      "blocked_by": []
+    },
+    "drift-reconciliation": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov reconcile <path> or --since <ref> surfaces phantom slugs, silent implementation, dead refs; output includes resolution hints. After autonomous code changes, run reconcile, validate, diff and include in PR description.",
+      "planned": false,
+      "provenance": "user: \"Reconciliation handles the case where code diverged from spec. When an agent modifies code autonomously, run reconcile, validate, diff; include in PR description.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/reconcile.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "sync-session-protocol": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "Sync session \u2014 agent-driven drift resolution: (1) prov sync <path> \u2014 read the full output; (2) present each drift item to the user with context; (3) ask the user what to do for each item (confirm intent before touching anything); (4) apply fixes via prov sync patch sub-commands or direct file edits; (5) prov validate; (6) prov diff; (7) commit spec + code together.",
+      "planned": false,
+      "provenance": "user: \"All drift resolution should be handled by the agent. The agent reads the sync report, explains each item to the user, asks clarifying questions, and applies the agreed fixes.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/skills/spec-drift-sync/SKILL.md",
+        "src/prov/commands/sync.py"
+      ],
+      "depends_on": [
+        "drift-reconciliation"
+      ],
+      "blocked_by": []
+    },
+    "rules-self-heal": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "The installed rules instruct the agent, once per session at session start \u2014 never on every turn \u2014 to verify the prov skills are installed; if missing, run prov init to restore them; if the prov CLI itself is missing, install it with uv tool install provenance-cli (or pipx/pip), then continue with the task.",
+      "planned": false,
+      "provenance": "user: \"Also make sure the rules/agents.md ask the agent to install the skill if not available when spec driven development is enabled in this repo (Ofcourse this shouldn't be done through tool calls every turn that will be bad experience)\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/rules/project-rules.md"
+      ],
+      "depends_on": [
+        "agent-assets-install"
+      ],
+      "blocked_by": []
+    },
+    "no-dead-ref": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports ERROR when a ~ path in the spec does not resolve to a real file or directory.",
+      "planned": false,
+      "provenance": "user: \"Every ~ path in specs resolves to a real file or directory. dead-ref blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-phantom-slug": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports ERROR when spec: slug in code has no matching entry in the spec.",
+      "planned": false,
+      "provenance": "user: \"Every spec: in code has a matching entry in specs. phantom-slug blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-duplicate-slug": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports ERROR when two entries share the same slug anywhere in the tree.",
+      "planned": false,
+      "provenance": "user: \"All slugs are globally unique across the specs tree. duplicate-slug blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-cycle": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports ERROR when a dependency chain forms a cycle.",
+      "planned": true,
+      "provenance": "user: \"No dependency chain forms a cycle. dependency-cycle blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-ghost-scope": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports ERROR when an entry has no > line.",
+      "planned": false,
+      "provenance": "user: \"Every node has a > line. ghost-scope blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-dangling-dep": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports ERROR when an @ target does not exist as a slug in the spec tree.",
+      "planned": false,
+      "provenance": "user: \"Every @ target exists as a slug in the specs tree. no-dangling-dep blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "no-dangling-block": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports ERROR when a ? Q:slug target does not exist as a question node.",
+      "planned": false,
+      "provenance": "user: \"Every ? Q:slug target exists as a question node. no-dangling-block blocks commit.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "validation-warnings": {
+      "type": "requirement",
+      "domain": "agent",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/agent.md",
+      "statement": "prov validate reports WARN for orphan-question (Q: not referenced by any ? line); warnings do not fail the build. Silent implementations and other drift are surfaced by prov reconcile and prov sync rather than validate.",
+      "planned": false,
+      "provenance": "user: \"Warnings do not fail the build.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/commands/validate.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "C:python-39-min": {
+      "type": "constraint",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "prov runs on Python 3.9 or newer.",
+      "planned": false,
+      "provenance": "user: \"Any agent or developer can run it without setup beyond Python.\"",
+      "assumptions": [],
+      "code_refs": [
+        "pyproject.toml"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "install-uv-tool": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "The primary install is uv: `uv tool install provenance-cli` puts a global `prov` on PATH; project setup then runs `prov init` from the project root.",
+      "planned": false,
+      "provenance": "user: \"Make sure we package this as a uv repo and use uv to publish package as a uv tool so that this cli could be installed globally easily\"",
+      "assumptions": [],
+      "code_refs": [
+        "README.md",
+        "pyproject.toml"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "install-pipx": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "pipx remains a supported fallback for a global install: `pipx install provenance-cli`.",
+      "planned": false,
+      "provenance": "user: \"pipx isolates the CLI so it doesn't conflict with project dependencies.\"",
+      "assumptions": [],
+      "code_refs": [
+        "README.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "install-pip": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "pip works into a virtualenv when uv and pipx are unavailable: `pip install provenance-cli`.",
+      "planned": false,
+      "provenance": "user: \"pip works for users who manage dependencies with pip/venv.\"",
+      "assumptions": [],
+      "code_refs": [
+        "README.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "project-bootstrap": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "`install.sh` is a thin bootstrap: it installs the prov CLI (uv tool, then pipx, then pip fallback), runs `prov init`, and installs the pre-commit hook when the target is a Git repo.",
+      "planned": false,
+      "provenance": "user: \"install.sh bootstraps repo-local spec and agent files; the CLI itself is the installed prov command.\"",
+      "assumptions": [],
+      "code_refs": [
+        "install.sh"
+      ],
+      "depends_on": [
+        "agent-assets-install",
+        "pre-commit-spec-validate"
+      ],
+      "blocked_by": []
+    },
+    "agent-assets-install": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "`prov init` installs the four spec-* skills and the managed rules block for both agent standards \u2014 Claude (`.claude/skills/`, CLAUDE.md) and open (`.agents/skills/`, AGENTS.md) \u2014 idempotently, reporting per-file status (installed, up to date, outdated, updated).",
+      "planned": false,
+      "provenance": "user: \"Install them for both claude standards and open standards that all other tools read\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/installer.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "rules-managed-block": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "Rules are written between `<!-- prov:agent-rules:start -->` / `<!-- prov:agent-rules:end -->` markers in CLAUDE.md and AGENTS.md; re-runs replace only the block, never surrounding user content; files with unbalanced or repeated markers are reported as damaged and never written.",
+      "planned": false,
+      "provenance": "inferred: idempotent re-install needs a bounded region to replace so user content in shared rules files stays untouched",
+      "assumptions": [
+        "marker-block mechanism chosen by the agent during the 0.2 productionization \u2014 not explicitly confirmed by the user"
+      ],
+      "code_refs": [
+        "src/prov/installer.py"
+      ],
+      "depends_on": [
+        "agent-assets-install"
+      ],
+      "blocked_by": []
+    },
+    "spec-dir-resolution": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "prov resolves the spec directory in order: (1) `$SPEC_DIR` env var; (2) the entry directory when it contains CONTEXT.md; (3) search upward from cwd for `prov/`, `spec/`, or `specs/` containing CONTEXT.md or .md files; (4) default `cwd/prov` (for `prov init` in a fresh project).",
+      "planned": false,
+      "provenance": "user: \"Agent and user run prov from project root; spec dir is discovered automatically.\"",
+      "assumptions": [],
+      "code_refs": [
+        "src/prov/spec_io.py"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "pypi-package-name": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "The PyPI package is named `provenance-cli` (the name `provenance` is taken on PyPI); the installed executable is `prov`.",
+      "planned": false,
+      "provenance": "user: \"provenance is taken; provenance-cli is the published name.\"",
+      "assumptions": [],
+      "code_refs": [
+        "pyproject.toml"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "publish-pypi-automated": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "Publishing to PyPI is automated via GitHub Actions when a release is published: `uv build` + `uv publish` with trusted publishing (no stored secrets).",
+      "planned": false,
+      "provenance": "user: \"Create a release; the workflow builds and uploads to PyPI.\"",
+      "assumptions": [],
+      "code_refs": [
+        ".github/workflows/publish-pypi.yml"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "publish-pypi-setup": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "One-time PyPI setup: create project `provenance-cli`, add trusted publisher (owner: nndn, repo: Provenance, workflow: publish-pypi.yml).",
+      "planned": false,
+      "provenance": "user: \"Trusted publishing avoids storing API tokens in CI.\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/publishing.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "publish-pypi-manual": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "Manual publish: `scripts/build.sh` then `scripts/publish.sh` (uv build / uv publish; requires UV_PUBLISH_TOKEN).",
+      "planned": false,
+      "provenance": "user: \"Fallback when not using GitHub releases.\"",
+      "assumptions": [],
+      "code_refs": [
+        "scripts/build.sh",
+        "scripts/publish.sh"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "dev-run-from-repo": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "Contributors run prov from this repo with `uv run prov <command>` from the repo root; the spec dir prov/ is discovered automatically; tests run with `uv run pytest`.",
+      "planned": false,
+      "provenance": "user: \"I think we should be renaming specs to prov\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/development.md"
+      ],
+      "depends_on": [
+        "spec-dir-resolution"
+      ],
+      "blocked_by": []
+    },
+    "dev-install-local": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "Contributors install the current local build globally via `scripts/dev-install.sh` (uv tool install from source) so `prov` uses their edits without publishing.",
+      "planned": false,
+      "provenance": "user: \"Local dev: test CLI changes without publishing to PyPI.\"",
+      "assumptions": [],
+      "code_refs": [
+        "scripts/dev-install.sh"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "ci-test-matrix": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "CI runs the test suite with uv on Python 3.9 through 3.13 on every push and pull request.",
+      "planned": false,
+      "provenance": "derived: C:python-39-min \u2014 the supported floor must stay tested",
+      "assumptions": [],
+      "code_refs": [
+        ".github/workflows/ci.yml"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    },
+    "pre-commit-spec-validate": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "Projects can install a pre-commit hook via `scripts/install-spec-pre-commit.sh` that runs `prov validate` when staged spec markdown changes or staged `spec:` backlink changes are present; the hook detects the CLI with `prov --version` (bare-run fallback for pre-0.2 installs) and does not rebuild or stage `.spec/`.",
+      "planned": false,
+      "provenance": "user: \"Validate staged spec markdown and staged spec: backlink changes on commit; do not rebuild or git add .spec by default.\"",
+      "assumptions": [],
+      "code_refs": [
+        "scripts/install-spec-pre-commit.sh"
+      ],
+      "depends_on": [
+        "spec-validate"
+      ],
+      "blocked_by": []
+    },
+    "docs-section": {
+      "type": "requirement",
+      "domain": "install",
+      "file": "/Users/nandan/Desktop/Dev/Provenance/prov/install.md",
+      "statement": "User documentation lives in `docs/` \u2014 CLI reference, spec format, agent setup, publishing, development, architecture \u2014 with README.md as the uv-first quick start.",
+      "planned": false,
+      "provenance": "user: \"What i want is a docs section where you can move all the docs\"",
+      "assumptions": [],
+      "code_refs": [
+        "docs/",
+        "README.md"
+      ],
+      "depends_on": [],
+      "blocked_by": []
+    }
+  },
+  "edges": [
+    {
+      "from": "living-index",
+      "to": "docs/architecture.md",
+      "type": "implements"
+    },
+    {
+      "from": "rebuilding-test",
+      "to": "docs/architecture.md",
+      "type": "implements"
+    },
+    {
+      "from": "inclusion-test",
+      "to": "docs/architecture.md",
+      "type": "implements"
+    },
+    {
+      "from": "property-graph",
+      "to": "src/prov/model.py",
+      "type": "implements"
+    },
+    {
+      "from": "property-graph",
+      "to": "src/prov/indexing.py",
+      "type": "implements"
+    },
+    {
+      "from": "single-hop-grep",
+      "to": "docs/spec-format.md",
+      "type": "implements"
+    },
+    {
+      "from": "multi-hop-cli",
+      "to": "property-graph",
+      "type": "depends-on"
+    },
+    {
+      "from": "multi-hop-cli",
+      "to": "src/prov/commands/impact.py",
+      "type": "implements"
+    },
+    {
+      "from": "multi-hop-cli",
+      "to": "src/prov/commands/orient.py",
+      "type": "implements"
+    },
+    {
+      "from": "requirement-node",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "constraint-node",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "question-node",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "provenance-required",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "assumption-disclosure",
+      "to": "src/prov/rules/spec-agent-protocol.md",
+      "type": "implements"
+    },
+    {
+      "from": "code-ref-sublines",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "planned-marker",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "planned-marker",
+      "to": "src/prov/commands/sync.py",
+      "type": "implements"
+    },
+    {
+      "from": "slug-format",
+      "to": "C:slug-unique",
+      "type": "depends-on"
+    },
+    {
+      "from": "slug-format",
+      "to": "C:slug-permanent",
+      "type": "depends-on"
+    },
+    {
+      "from": "slug-format",
+      "to": "src/prov/commands/check_slug.py",
+      "type": "implements"
+    },
+    {
+      "from": "domain-file",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "domain-split",
+      "to": "docs/architecture.md",
+      "type": "implements"
+    },
+    {
+      "from": "context-file",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "out-of-scope-section",
+      "to": "src/prov/commands/domain.py",
+      "type": "implements"
+    },
+    {
+      "from": "refs-section",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "refs-section",
+      "to": "src/prov/indexing.py",
+      "type": "implements"
+    },
+    {
+      "from": "data-model",
+      "to": "src/prov/model.py",
+      "type": "implements"
+    },
+    {
+      "from": "file-backend",
+      "to": "C:files-canonical",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-backend",
+      "to": "C:column-zero",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-backend",
+      "to": "C:two-space-indent",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-backend",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "json-cache-backend",
+      "to": "file-backend",
+      "type": "depends-on"
+    },
+    {
+      "from": "json-cache-backend",
+      "to": "src/prov/commands/rebuild.py",
+      "type": "implements"
+    },
+    {
+      "from": "cache-generated-optional",
+      "to": "json-cache-backend",
+      "type": "depends-on"
+    },
+    {
+      "from": "cache-generated-optional",
+      "to": "src/prov/commands/rebuild.py",
+      "type": "implements"
+    },
+    {
+      "from": "cache-generated-optional",
+      "to": "scripts/install-spec-pre-commit.sh",
+      "type": "implements"
+    },
+    {
+      "from": "graphdb-backend",
+      "to": "backend-interface",
+      "type": "depends-on"
+    },
+    {
+      "from": "backend-selection",
+      "to": "backend-interface",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-writer-separate",
+      "to": "C:backend-readonly",
+      "type": "depends-on"
+    },
+    {
+      "from": "file-writer-separate",
+      "to": "src/prov/writer.py",
+      "type": "implements"
+    },
+    {
+      "from": "rebuild-from-files",
+      "to": "C:files-canonical",
+      "type": "depends-on"
+    },
+    {
+      "from": "rebuild-from-files",
+      "to": "src/prov/commands/rebuild.py",
+      "type": "implements"
+    },
+    {
+      "from": "cli-typer-interface",
+      "to": "src/prov/cli.py",
+      "type": "implements"
+    },
+    {
+      "from": "structured-output",
+      "to": "src/prov/commands/",
+      "type": "implements"
+    },
+    {
+      "from": "structured-output",
+      "to": "src/prov/format.py",
+      "type": "implements"
+    },
+    {
+      "from": "backend-agnostic-output",
+      "to": "backend-interface",
+      "type": "depends-on"
+    },
+    {
+      "from": "spec-orient",
+      "to": "src/prov/commands/orient.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-scope",
+      "to": "src/prov/commands/scope.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-context",
+      "to": "src/prov/commands/context.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-impact",
+      "to": "src/prov/commands/impact.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-find",
+      "to": "src/prov/commands/find.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-domain",
+      "to": "src/prov/commands/domain.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-validate",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-diff",
+      "to": "src/prov/commands/diff.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-write",
+      "to": "src/prov/commands/write.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-write",
+      "to": "src/prov/writer.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-reconcile",
+      "to": "src/prov/commands/reconcile.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-sync",
+      "to": "spec-reconcile",
+      "type": "depends-on"
+    },
+    {
+      "from": "spec-sync",
+      "to": "src/prov/commands/sync.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-check-slug",
+      "to": "src/prov/commands/check_slug.py",
+      "type": "implements"
+    },
+    {
+      "from": "rebuild-command",
+      "to": "rebuild-from-files",
+      "type": "depends-on"
+    },
+    {
+      "from": "rebuild-command",
+      "to": "src/prov/commands/rebuild.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-init",
+      "to": "agent-assets-install",
+      "type": "depends-on"
+    },
+    {
+      "from": "spec-init",
+      "to": "src/prov/commands/init.py",
+      "type": "implements"
+    },
+    {
+      "from": "change-flow",
+      "to": "src/prov/rules/spec-agent-protocol.md",
+      "type": "implements"
+    },
+    {
+      "from": "change-flow",
+      "to": "src/prov/prompts/spec-agent.md",
+      "type": "implements"
+    },
+    {
+      "from": "spec-backlink",
+      "to": "src/prov/indexing.py",
+      "type": "implements"
+    },
+    {
+      "from": "coding-session-protocol",
+      "to": "spec-scope",
+      "type": "depends-on"
+    },
+    {
+      "from": "coding-session-protocol",
+      "to": "spec-validate",
+      "type": "depends-on"
+    },
+    {
+      "from": "coding-session-protocol",
+      "to": "src/prov/rules/spec-agent-protocol.md",
+      "type": "implements"
+    },
+    {
+      "from": "maintain-session-protocol",
+      "to": "src/prov/rules/spec-agent-protocol.md",
+      "type": "implements"
+    },
+    {
+      "from": "new-feature-session-protocol",
+      "to": "src/prov/skills/spec-request-flow/SKILL.md",
+      "type": "implements"
+    },
+    {
+      "from": "debugging-session-protocol",
+      "to": "src/prov/rules/spec-agent-protocol.md",
+      "type": "implements"
+    },
+    {
+      "from": "assumption-confirmation",
+      "to": "src/prov/commands/diff.py",
+      "type": "implements"
+    },
+    {
+      "from": "contradiction-surfacing",
+      "to": "src/prov/rules/spec-agent-protocol.md",
+      "type": "implements"
+    },
+    {
+      "from": "pre-commit-hook",
+      "to": "spec-validate",
+      "type": "depends-on"
+    },
+    {
+      "from": "pre-commit-hook",
+      "to": "cache-generated-optional",
+      "type": "depends-on"
+    },
+    {
+      "from": "pre-commit-hook",
+      "to": "scripts/install-spec-pre-commit.sh",
+      "type": "implements"
+    },
+    {
+      "from": "drift-reconciliation",
+      "to": "src/prov/commands/reconcile.py",
+      "type": "implements"
+    },
+    {
+      "from": "sync-session-protocol",
+      "to": "drift-reconciliation",
+      "type": "depends-on"
+    },
+    {
+      "from": "sync-session-protocol",
+      "to": "src/prov/skills/spec-drift-sync/SKILL.md",
+      "type": "implements"
+    },
+    {
+      "from": "sync-session-protocol",
+      "to": "src/prov/commands/sync.py",
+      "type": "implements"
+    },
+    {
+      "from": "rules-self-heal",
+      "to": "agent-assets-install",
+      "type": "depends-on"
+    },
+    {
+      "from": "rules-self-heal",
+      "to": "src/prov/rules/project-rules.md",
+      "type": "implements"
+    },
+    {
+      "from": "no-dead-ref",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "no-phantom-slug",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "no-duplicate-slug",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "no-ghost-scope",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "no-dangling-dep",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "no-dangling-block",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "validation-warnings",
+      "to": "src/prov/commands/validate.py",
+      "type": "implements"
+    },
+    {
+      "from": "C:python-39-min",
+      "to": "pyproject.toml",
+      "type": "depends-on"
+    },
+    {
+      "from": "install-uv-tool",
+      "to": "README.md",
+      "type": "depends-on"
+    },
+    {
+      "from": "install-uv-tool",
+      "to": "pyproject.toml",
+      "type": "depends-on"
+    },
+    {
+      "from": "install-pipx",
+      "to": "README.md",
+      "type": "depends-on"
+    },
+    {
+      "from": "install-pip",
+      "to": "README.md",
+      "type": "depends-on"
+    },
+    {
+      "from": "project-bootstrap",
+      "to": "agent-assets-install",
+      "type": "depends-on"
+    },
+    {
+      "from": "project-bootstrap",
+      "to": "pre-commit-spec-validate",
+      "type": "depends-on"
+    },
+    {
+      "from": "project-bootstrap",
+      "to": "install.sh",
+      "type": "depends-on"
+    },
+    {
+      "from": "agent-assets-install",
+      "to": "src/prov/installer.py",
+      "type": "implements"
+    },
+    {
+      "from": "rules-managed-block",
+      "to": "agent-assets-install",
+      "type": "depends-on"
+    },
+    {
+      "from": "rules-managed-block",
+      "to": "src/prov/installer.py",
+      "type": "implements"
+    },
+    {
+      "from": "spec-dir-resolution",
+      "to": "src/prov/spec_io.py",
+      "type": "implements"
+    },
+    {
+      "from": "pypi-package-name",
+      "to": "pyproject.toml",
+      "type": "depends-on"
+    },
+    {
+      "from": "publish-pypi-automated",
+      "to": ".github/workflows/publish-pypi.yml",
+      "type": "implements"
+    },
+    {
+      "from": "publish-pypi-setup",
+      "to": "docs/publishing.md",
+      "type": "implements"
+    },
+    {
+      "from": "publish-pypi-manual",
+      "to": "scripts/build.sh",
+      "type": "implements"
+    },
+    {
+      "from": "publish-pypi-manual",
+      "to": "scripts/publish.sh",
+      "type": "implements"
+    },
+    {
+      "from": "dev-run-from-repo",
+      "to": "spec-dir-resolution",
+      "type": "depends-on"
+    },
+    {
+      "from": "dev-run-from-repo",
+      "to": "docs/development.md",
+      "type": "implements"
+    },
+    {
+      "from": "dev-install-local",
+      "to": "scripts/dev-install.sh",
+      "type": "implements"
+    },
+    {
+      "from": "ci-test-matrix",
+      "to": ".github/workflows/ci.yml",
+      "type": "implements"
+    },
+    {
+      "from": "pre-commit-spec-validate",
+      "to": "spec-validate",
+      "type": "depends-on"
+    },
+    {
+      "from": "pre-commit-spec-validate",
+      "to": "scripts/install-spec-pre-commit.sh",
+      "type": "implements"
+    },
+    {
+      "from": "docs-section",
+      "to": "docs/",
+      "type": "implements"
+    },
+    {
+      "from": "docs-section",
+      "to": "README.md",
+      "type": "depends-on"
+    }
+  ]
+}

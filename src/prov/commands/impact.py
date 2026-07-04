@@ -6,6 +6,7 @@ from prov.indexing import build_edges, nodes_by_slug
 from prov.spec_io import load_backend
 
 
+# spec: spec-impact
 def cmd_impact(spec_dir: Path, repo_root: Path, slug: str) -> None:
     nodes, _, _, _, _ = load_backend(spec_dir)
     nodes_by_slug_map = nodes_by_slug(nodes)
@@ -24,18 +25,18 @@ def cmd_impact(spec_dir: Path, repo_root: Path, slug: str) -> None:
                 worklist.append(x.slug)
     code_paths: list[str] = []
     all_slugs = (trans | {slug}) if slug in nodes_by_slug_map else trans
-    for n in [nodes_by_slug_map[s] for s in all_slugs if s in nodes_by_slug_map]:
+    for n in [nodes_by_slug_map[s] for s in sorted(all_slugs) if s in nodes_by_slug_map]:
         if n and n.code_refs:
             code_paths.extend(n.code_refs)
     code_paths.extend(nodes_by_slug_map[slug].code_refs if slug in nodes_by_slug_map else [])
     assumptions: list[tuple[str, str]] = []
-    for s in trans | {slug}:
+    for s in sorted(trans | {slug}):
         if s in nodes_by_slug_map:
             for a in nodes_by_slug_map[s].assumptions:
                 assumptions.append((s, a))
     planned = [
         nodes_by_slug_map[s]
-        for s in trans
+        for s in sorted(trans)
         if s in nodes_by_slug_map and getattr(nodes_by_slug_map[s], "planned", False)
     ]
 
@@ -47,7 +48,7 @@ def cmd_impact(spec_dir: Path, repo_root: Path, slug: str) -> None:
         print(f"  {n.slug}    [{n.domain}]    {n.type}    {status}")
     print()
     print(f"Transitive dependents ({len(trans)} total):")
-    for s in list(trans)[:15]:
+    for s in sorted(trans)[:15]:
         d = nodes_by_slug_map.get(s)
         if d:
             print(f"  {s}    [{d.domain}]")

@@ -7,6 +7,7 @@ from pathlib import Path
 from prov.model import Node, NodeType
 
 
+# spec: file-writer-separate, spec-write
 def patch_entry_in_spec(
     spec_path: Path,
     slug: str,

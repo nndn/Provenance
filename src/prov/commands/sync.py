@@ -7,6 +7,7 @@ from prov.spec_io import load_backend
 from prov.writer import patch_entry_in_spec, remove_spec_backlink_from_code
 
 
+# spec: spec-sync
 def cmd_sync(spec_dir: Path, repo_root: Path, args: list[str]) -> int:
     if args and args[0] in (
         "mark-implemented",

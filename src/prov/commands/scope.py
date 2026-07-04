@@ -5,6 +5,7 @@ from prov.indexing import build_edges, nodes_by_slug, slugs_for_path
 from prov.spec_io import load_backend
 
 
+# spec: spec-scope
 def cmd_scope(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
     nodes, ctx, _, refs_by_domain, _ = load_backend(spec_dir)
     slugs = slugs_for_path(path_arg, nodes, refs_by_domain, repo_root)
@@ -19,12 +20,12 @@ def cmd_scope(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
 
     reqs = [
         nodes_by_slug_map[s]
-        for s in slugs
+        for s in sorted(slugs)
         if s in nodes_by_slug_map and nodes_by_slug_map[s].type == "requirement"
     ]
     constraints = [
         nodes_by_slug_map[s]
-        for s in slugs
+        for s in sorted(slugs)
         if s in nodes_by_slug_map and nodes_by_slug_map[s].type == "constraint"
     ]
     dep_on = set()
@@ -32,13 +33,13 @@ def cmd_scope(spec_dir: Path, repo_root: Path, path_arg: str) -> None:
         if e.to_slug in slugs and e.type == "depends-on":
             dep_on.add(e.from_slug)
     dep_nodes = [
-        nodes_by_slug_map[s] for s in dep_on if s in nodes_by_slug_map and s not in slugs
+        nodes_by_slug_map[s] for s in sorted(dep_on) if s in nodes_by_slug_map and s not in slugs
     ]
     qs = set()
     for n in reqs + dep_nodes:
         for b in getattr(n, "blocked_by", []):
             qs.add(b)
-    q_nodes = [nodes_by_slug_map[s] for s in qs if s in nodes_by_slug_map]
+    q_nodes = [nodes_by_slug_map[s] for s in sorted(qs) if s in nodes_by_slug_map]
 
     print(f"=== SCOPE: {path_arg} ===")
     print()

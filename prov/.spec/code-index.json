@@ -1,0 +1,184 @@
+{
+  "generated": "2026-07-04T04:48:07.419124Z",
+  "by_file": {
+    "docs/architecture.md": [
+      "living-index",
+      "rebuilding-test",
+      "inclusion-test",
+      "domain-split"
+    ],
+    "src/prov/model.py": [
+      "property-graph",
+      "data-model"
+    ],
+    "src/prov/indexing.py": [
+      "property-graph",
+      "refs-section",
+      "spec-backlink"
+    ],
+    "docs/spec-format.md": [
+      "single-hop-grep"
+    ],
+    "src/prov/commands/impact.py": [
+      "multi-hop-cli",
+      "spec-impact"
+    ],
+    "src/prov/commands/orient.py": [
+      "multi-hop-cli",
+      "spec-orient"
+    ],
+    "src/prov/spec_io.py": [
+      "requirement-node",
+      "constraint-node",
+      "question-node",
+      "code-ref-sublines",
+      "planned-marker",
+      "domain-file",
+      "context-file",
+      "refs-section",
+      "file-backend",
+      "spec-dir-resolution"
+    ],
+    "src/prov/commands/validate.py": [
+      "provenance-required",
+      "spec-validate",
+      "no-dead-ref",
+      "no-phantom-slug",
+      "no-duplicate-slug",
+      "no-ghost-scope",
+      "no-dangling-dep",
+      "no-dangling-block",
+      "validation-warnings"
+    ],
+    "src/prov/rules/spec-agent-protocol.md": [
+      "assumption-disclosure",
+      "change-flow",
+      "coding-session-protocol",
+      "maintain-session-protocol",
+      "debugging-session-protocol",
+      "contradiction-surfacing"
+    ],
+    "src/prov/commands/sync.py": [
+      "planned-marker",
+      "spec-sync",
+      "sync-session-protocol"
+    ],
+    "src/prov/commands/check_slug.py": [
+      "slug-format",
+      "spec-check-slug"
+    ],
+    "src/prov/commands/domain.py": [
+      "out-of-scope-section",
+      "spec-domain"
+    ],
+    "src/prov/commands/rebuild.py": [
+      "json-cache-backend",
+      "cache-generated-optional",
+      "rebuild-from-files",
+      "rebuild-command"
+    ],
+    "scripts/install-spec-pre-commit.sh": [
+      "cache-generated-optional",
+      "pre-commit-hook",
+      "pre-commit-spec-validate"
+    ],
+    "src/prov/writer.py": [
+      "file-writer-separate",
+      "spec-write"
+    ],
+    "src/prov/cli.py": [
+      "cli-typer-interface"
+    ],
+    "src/prov/commands/": [
+      "structured-output"
+    ],
+    "src/prov/format.py": [
+      "structured-output"
+    ],
+    "src/prov/commands/scope.py": [
+      "spec-scope"
+    ],
+    "src/prov/commands/context.py": [
+      "spec-context"
+    ],
+    "src/prov/commands/find.py": [
+      "spec-find"
+    ],
+    "src/prov/commands/diff.py": [
+      "spec-diff",
+      "assumption-confirmation"
+    ],
+    "src/prov/commands/write.py": [
+      "spec-write"
+    ],
+    "src/prov/commands/reconcile.py": [
+      "spec-reconcile",
+      "drift-reconciliation"
+    ],
+    "src/prov/commands/init.py": [
+      "spec-init"
+    ],
+    "src/prov/prompts/spec-agent.md": [
+      "change-flow"
+    ],
+    "src/prov/skills/spec-request-flow/SKILL.md": [
+      "new-feature-session-protocol"
+    ],
+    "src/prov/skills/spec-drift-sync/SKILL.md": [
+      "sync-session-protocol"
+    ],
+    "src/prov/rules/project-rules.md": [
+      "rules-self-heal"
+    ],
+    "pyproject.toml": [
+      "C:python-39-min",
+      "install-uv-tool",
+      "pypi-package-name"
+    ],
+    "README.md": [
+      "install-uv-tool",
+      "install-pipx",
+      "install-pip",
+      "docs-section"
+    ],
+    "install.sh": [
+      "project-bootstrap"
+    ],
+    "src/prov/installer.py": [
+      "agent-assets-install",
+      "rules-managed-block"
+    ],
+    ".github/workflows/publish-pypi.yml": [
+      "publish-pypi-automated"
+    ],
+    "docs/publishing.md": [
+      "publish-pypi-setup"
+    ],
+    "scripts/build.sh": [
+      "publish-pypi-manual"
+    ],
+    "scripts/publish.sh": [
+      "publish-pypi-manual"
+    ],
+    "docs/development.md": [
+      "dev-run-from-repo"
+    ],
+    "scripts/dev-install.sh": [
+      "dev-install-local"
+    ],
+    ".github/workflows/ci.yml": [
+      "ci-test-matrix"
+    ],
+    "docs/": [
+      "docs-section"
+    ]
+  },
+  "by_dir": {
+    "core": [],
+    "format": [],
+    "storage": [],
+    "cli": [],
+    "agent": [],
+    "install": []
+  }
+}

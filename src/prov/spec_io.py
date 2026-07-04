@@ -24,6 +24,7 @@ def _find_spec_dir_from_cwd() -> Path | None:
     return None
 
 
+# spec: spec-dir-resolution
 def get_spec_dir(entry_dir: Path | None = None) -> Path:
     """Resolve spec directory. SPEC_DIR env wins; else entry script's dir; else search cwd."""
     d = os.environ.get("SPEC_DIR")
@@ -58,6 +59,7 @@ def get_repo_root(spec_dir: Path) -> Path:
         return spec_dir.parent
 
 
+# spec: file-backend
 def parse_spec_file(path: Path, domain: str) -> tuple[list[Node], str, list[str]]:
     """Parse a domain spec file. Returns (nodes, summary_line, refs)."""
     nodes: list[Node] = []

@@ -88,6 +88,7 @@ def slugs_for_path(
     return slugs
 
 
+# spec: spec-backlink
 def grep_spec_in_code(
     path_or_dir: Path, repo_root: Path
 ) -> list[tuple[str, int, str]]:

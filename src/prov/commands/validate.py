@@ -6,6 +6,7 @@ from prov.indexing import build_edges, grep_spec_in_code, nodes_by_slug
 from prov.spec_io import load_backend
 
 
+# spec: spec-validate
 def cmd_validate(spec_dir: Path, repo_root: Path) -> int:
     nodes, _, _, refs_by_domain, _ = load_backend(spec_dir)
     nodes_by_slug_map = nodes_by_slug(nodes)

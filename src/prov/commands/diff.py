@@ -6,6 +6,7 @@ from prov.model import Node
 from prov.spec_io import load_backend, load_nodes_from_ref
 
 
+# spec: spec-diff, assumption-confirmation
 def cmd_diff(spec_dir: Path, repo_root: Path, ref: str) -> None:
     nodes, _, _, _, _ = load_backend(spec_dir)
     old_nodes = load_nodes_from_ref(spec_dir, repo_root, ref)

@@ -5,6 +5,7 @@ from pathlib import Path
 from prov.spec_io import load_backend
 
 
+# spec: spec-domain, out-of-scope-section
 def cmd_domain(spec_dir: Path, name: str) -> None:
     nodes, _, summaries, refs_by_domain, file_by_domain = load_backend(spec_dir)
     domain_nodes = [n for n in nodes if n.domain == name]

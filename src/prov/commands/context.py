@@ -6,6 +6,7 @@ from prov.indexing import build_edges, nodes_by_slug
 from prov.spec_io import load_backend
 
 
+# spec: spec-context
 def cmd_context(spec_dir: Path, repo_root: Path, slug: str) -> None:
     nodes, _, _, _, file_by_domain = load_backend(spec_dir)
     nodes_by_slug_map = nodes_by_slug(nodes)

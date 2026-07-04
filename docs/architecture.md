@@ -3,6 +3,11 @@
 > The complete technical specification for the spec system.
 > This document is the source of truth for anyone building,
 > extending, or integrating with the spec system.
+>
+> Note: some sections predate the packaged CLI and show historical
+> examples (e.g. `spec.py` invocations). The current CLI is the `prov`
+> package installed from PyPI — see [cli.md](cli.md) for the command
+> reference and [development.md](development.md) for the repo layout.
 
 ---
 
@@ -148,29 +153,36 @@ graph later by implementing the same interface.
 
 ```
 <repo-root>/
-  src/
-    prov.py             ← CLI source (installed into user projects as prov/prov.py)
-  specs/                ← this repo's own spec (meta: Provenance documenting itself)
+  src/prov/             ← CLI package (published to PyPI as provenance-cli)
+    cli.py              ← typer app / entry point
+    commands/           ← one module per command
+    skills/             ← packaged agent skills (installed by prov init)
+    rules/              ← packaged agent rules templates
+    prompts/            ← full drop-in agent prompt
+  prov/                 ← this repo's own spec (meta: Provenance documenting itself)
     CONTEXT.md
     <domain>.md
     .spec/
-  ARCHITECTURE.md       ← this document
+  docs/architecture.md  ← this document
 ```
 
-**User project after install** (target of install.sh):
+**User project after `prov init`:**
 
 ```
 <repo-root>/
-  prov/                 ← installer creates prov/ by default
-    prov.py             ← copied from src/prov.py
+  prov/                 ← spec root
     CONTEXT.md
     <domain>.md
-    .spec/
+  .claude/skills/       ← prov skills (Claude standard)
+  .agents/skills/       ← prov skills (open standard)
+  CLAUDE.md             ← managed prov rules block
+  AGENTS.md             ← managed prov rules block
 ```
 
-**prov.py is self-contained.** It requires only Python 3.9+ standard library.
-No external dependencies. Any agent or developer can run it without setup.
-It is the only file that needs to be copied when bootstrapping a new project.
+**The CLI is installed once, globally** (`uv tool install provenance-cli`;
+it depends on typer). No CLI code is copied into user projects. The spec
+files themselves are plain markdown — any agent or developer can read them
+with grep alone, without the CLI or any setup.
 
 **`.spec/` is committed.** The cache is part of the repository so that `prov scope`
 and `prov impact` resolve instantly from the index without a build step.
@@ -1434,7 +1446,7 @@ Before every commit:
 When writing or modifying spec entries:
 
 1. Use: python specs/spec.py write (validates before writing)
-2. Or edit the markdown files directly — the format is documented in specs/SPEC-ARCHITECTURE.md
+2. Or edit the markdown files directly — the format is documented in docs/spec-format.md
 3. Never write to .spec/ (the cache) — it is machine-generated from the files
 4. Always run spec validate after any manual file edit
 
@@ -1805,7 +1817,7 @@ grep -r "^  ? Q:guest-access-expiry" specs/      # what is blocked by this quest
 grep -rn "spec: session-expiry" src/             # code implementing this slug
 
 # Code-spec queries
-grep -r "~src/api/auth" specs/                   # specs touching a code path
+grep -r "~ src/api/auth" specs/                  # specs touching a code path
 grep -rn "spec: " src/middleware/session.py      # what slugs does this file implement
 
 # Collision and integrity

@@ -13,6 +13,7 @@ from prov.model import Node
 from prov.spec_io import load_backend
 
 
+# spec: spec-orient
 def cmd_orient(spec_dir: Path, repo_root: Path) -> None:
     nodes, ctx, summaries, refs_by_domain, _ = load_backend(spec_dir)
     by_domain: dict[str, list[Node]] = {}

@@ -10,7 +10,7 @@ alwaysApply: false
 
 > When you are about to start work, use this table to identify which skill
 > gives you the detailed guidance you need. Read the SKILL.md at the listed path.
-> Skills live in `src/prov/skills/`.
+> Skills live in `.claude/skills/` (Claude) or `.agents/skills/` (open standard).
 
 ---
 
@@ -33,7 +33,7 @@ alwaysApply: false
 ### `spec-request-flow`
 The complete six-phase protocol with exact steps. Phase 1 (orient and read), Phase 2 (clarify and extract), Phase 3 (propose — do not write yet), Phase 4 (write spec), Phase 5 (implement), Phase 6 (sync and close). Also covers debugging and bulk-drift variants.
 
-**Path:** `src/prov/skills/spec-request-flow/SKILL.md`
+**Path:** `.claude/skills/spec-request-flow/SKILL.md` or `.agents/skills/spec-request-flow/SKILL.md`
 **Use when:** Any task involving a change. This skill is the main protocol.
 
 ---
@@ -41,7 +41,7 @@ The complete six-phase protocol with exact steps. Phase 1 (orient and read), Pha
 ### `spec-capture-expectations`
 How to treat every task as a chance to compile user intent into the spec. Five questions to ask on every task. When to add vs skip entries. How to record implicit expectations with `!` lines. The assumption confirmation loop. The compounding spec principle.
 
-**Path:** `src/prov/skills/spec-capture-expectations/SKILL.md`
+**Path:** `.claude/skills/spec-capture-expectations/SKILL.md` or `.agents/skills/spec-capture-expectations/SKILL.md`
 **Use when:** Session start, any task where the user's words reveal an unstated expectation, any request that implies behavior not yet in the spec.
 
 ---
@@ -49,7 +49,7 @@ How to treat every task as a chance to compile user intent into the spec. Five q
 ### `spec-entry-format`
 The format reference. Node types (`slug:`, `C:slug:`, `Q:slug:`), sigils (`>`, `!`, `@`, `~`, `?`), provenance source types (user, inferred, code, regulatory, derived), slug rules, file format invariants (column-0, 2-space indent), complete domain file example, code backlink format, commit message format, grep patterns, prov CLI quick reference.
 
-**Path:** `src/prov/skills/spec-entry-format/SKILL.md`
+**Path:** `.claude/skills/spec-entry-format/SKILL.md` or `.agents/skills/spec-entry-format/SKILL.md`
 **Use when:** Writing spec entries, adding code backlinks, checking format, reading an unfamiliar entry structure.
 
 ---
@@ -57,7 +57,7 @@ The format reference. Node types (`slug:`, `C:slug:`, `Q:slug:`), sigils (`>`, `
 ### `spec-drift-sync`
 The drift resolution protocol. Three drift types (silent implementation, phantom slug, dead ref). The sync session steps: run report, present each item to the user, confirm intent, apply patch commands. Resolution decision guide per drift type. What to do after autonomous code changes.
 
-**Path:** `src/prov/skills/spec-drift-sync/SKILL.md`
+**Path:** `.claude/skills/spec-drift-sync/SKILL.md` or `.agents/skills/spec-drift-sync/SKILL.md`
 **Use when:** Running `prov sync`, after bulk refactors, when code and spec are out of alignment, when preparing a PR after autonomous changes.
 
 ---
@@ -65,7 +65,7 @@ The drift resolution protocol. Three drift types (silent implementation, phantom
 ## How to use skills
 
 1. Identify the situation from the table above.
-2. Read the skill file: `src/prov/skills/<skill-name>/SKILL.md`.
+2. Read the skill file: `.claude/skills/<skill-name>/SKILL.md` (Claude) or `.agents/skills/<skill-name>/SKILL.md` (open standard).
 3. Follow the guidance in the skill for the current task.
 4. The skill may reference other skills — load those too if needed.
 
@@ -75,12 +75,14 @@ Skills are loaded on demand. They provide detailed, task-specific guidance that 
 
 ## Full references
 
+Skill paths below are for the Claude standard; substitute `.agents/skills/` for the open standard.
+
 | Resource | Path | Purpose |
 |----------|------|---------|
-| Master protocol rule | `src/prov/rules/spec-agent-protocol.md` | Always-on: laws, flow, expectation capture |
-| Skill router (this file) | `src/prov/rules/spec-skill-router.md` | When to load which skill |
-| Full agent prompt | `src/prov/prompts/spec-agent.md` | Complete instructions for drop-in use |
-| Request flow skill | `src/prov/skills/spec-request-flow/SKILL.md` | Detailed phase guidance |
-| Capture expectations skill | `src/prov/skills/spec-capture-expectations/SKILL.md` | Expectation extraction |
-| Entry format skill | `src/prov/skills/spec-entry-format/SKILL.md` | Format reference |
-| Drift sync skill | `src/prov/skills/spec-drift-sync/SKILL.md` | Drift resolution |
+| Master protocol rule | managed block in `CLAUDE.md` / `AGENTS.md` (source: `rules/spec-agent-protocol.md` in the Provenance package) | Always-on: laws, flow, expectation capture |
+| Skill router (this file) | `rules/spec-skill-router.md` in the Provenance package | When to load which skill |
+| Full agent prompt | `prompts/spec-agent.md` in the Provenance package | Complete instructions for drop-in use |
+| Request flow skill | `.claude/skills/spec-request-flow/SKILL.md` | Detailed phase guidance |
+| Capture expectations skill | `.claude/skills/spec-capture-expectations/SKILL.md` | Expectation extraction |
+| Entry format skill | `.claude/skills/spec-entry-format/SKILL.md` | Format reference |
+| Drift sync skill | `.claude/skills/spec-drift-sync/SKILL.md` | Drift resolution |

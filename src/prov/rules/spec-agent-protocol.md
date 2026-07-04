@@ -11,8 +11,8 @@ alwaysApply: true
 
 > Drop this file into `.cursorrules`, `CLAUDE.md`, `AGENTS.md`, `.gemini/GEMINI.md`,
 > or any equivalent rules file your agent reads at session start.
-> Full instructions: `src/prov/prompts/spec-agent.md`
-> Skills directory: `src/prov/skills/`
+> Full instructions: `spec-agent.md` (prompts/ in the Provenance package)
+> Skills directory: `.claude/skills/` (Claude) or `.agents/skills/` (open standard)
 
 ---
 
@@ -26,7 +26,7 @@ The markdown files in `prov/`, `spec/`, or `specs/` are the source of truth. The
 
 ## The laws — apply without exception
 
-1. **Read before write.** Never modify code or spec without first understanding what governs it. Use `prov scope <path>` or `grep -r "~<path>" spec/`.
+1. **Read before write.** Never modify code or spec without first understanding what governs it. Use `prov scope <path>` or `grep -r "~ <path>" spec/`.
 2. **Every gap gets a `!` line.** Any value, threshold, or choice made on the user's behalf must be marked. "It seemed obvious" is never an excuse.
 3. **Every entry needs a `>` line.** No entry exists without provenance. Use a source prefix: `user:`, `inferred:`, `code:`, `regulatory:`, `derived`. Quote the user where possible (`> user: "..."`). For agent interpretation use `> inferred:` with `!`. For code-derived use `> code:` with `!`. See spec-entry-format skill.
 4. **Spec and code in the same commit.** Never split them.
@@ -56,7 +56,7 @@ The markdown files in `prov/`, `spec/`, or `specs/` are the source of truth. The
 
 Spec updates happen in **Phase 4** and **Phase 6** — proactively, every time.
 
-**Phase 1:** `grep -rh "^>" spec/*.md` · `grep -r "^Q:" spec/` · `grep -r "\[planned\]" spec/` · `grep -r "~<path>" spec/`. If prov available: `prov orient` · `prov scope <path>` · `prov context <slug>` · `prov impact <slug>`. Read code referenced by `~` lines. Do not change yet.
+**Phase 1:** `grep -rh "^>" spec/*.md` · `grep -r "^Q:" spec/` · `grep -r "\[planned\]" spec/` · `grep -r "~ <path>" spec/`. If prov available: `prov orient` · `prov scope <path>` · `prov context <slug>` · `prov impact <slug>`. Read code referenced by `~` lines. Do not change yet.
 
 **Phase 2:** Blocking unknown → ask. Non-blocking → proceed with `!` assumption, surface in Phase 3. One question per message. If request contradicts an existing entry, stop and surface: slug + statement + Options (Replace / Add alongside / Out of scope). Wait for choice.
 
@@ -105,5 +105,12 @@ Phase 1 scoped to the bug: `prov scope <file>` · `prov context <slug>`. Then:
 | Writing or editing spec files; adding backlinks | `spec-entry-format` |
 | Resolving drift after bulk changes or refactors | `spec-drift-sync` |
 
-Skills live in `src/prov/skills/<skill-name>/SKILL.md`.
-Full agent instructions: `src/prov/prompts/spec-agent.md`.
+Skills live in `.claude/skills/<skill-name>/SKILL.md` (Claude) or
+`.agents/skills/<skill-name>/SKILL.md` (open standard).
+Full agent instructions: `spec-agent.md` (prompts/ in the Provenance package).
+
+---
+
+## Self-heal
+
+Spec-driven development is enabled in this repo (`prov/` spec directory present). Once per session at session start — never on every turn — verify the prov skills are installed (`.claude/skills/spec-*` or `.agents/skills/spec-*`). If missing, run `prov init` to restore them; if the prov CLI itself is missing, install it with `uv tool install provenance-cli` (or pipx/pip). Then continue with the task.

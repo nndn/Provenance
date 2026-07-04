@@ -70,7 +70,7 @@ grep -r "\[planned\]" spec/                                    # backlog
 grep -r "^  !" spec/                                           # unconfirmed assumptions
 
 # What governs this path?
-grep -r "~<path>" spec/        # e.g. grep -r "~src/middleware" spec/
+grep -r "~ <path>" spec/       # e.g. grep -r "~ src/middleware" spec/
 grep -rn "spec: <slug>" src/   # code implementing a slug
 
 # Find entry by slug or keyword
@@ -523,8 +523,18 @@ prov diff [ref]          # semantic change manifest for human review
 prov reconcile <path>    # detect code↔spec drift (read-only)
 prov sync [path]         # interactive drift resolution
 prov rebuild             # regenerate optional .spec/ cache from files
-prov init                # scaffold CONTEXT.md (new project)
+
+# Bootstrap
+prov init                # scaffold CONTEXT.md + install agent skills/rules
+                         #   --check      report status only, write nothing
+                         #   --force      overwrite locally modified skills
+                         #   --no-agents  scaffold CONTEXT.md only
 ```
+
+`prov init` installs the spec skills to `.claude/skills/<skill-name>/SKILL.md`
+(Claude standard) and `.agents/skills/<skill-name>/SKILL.md` (open standard),
+and manages a rules block in `CLAUDE.md` / `AGENTS.md` at the repo root. Load
+skills from those installed locations.
 
 ---
 
@@ -541,7 +551,7 @@ grep -r "^  !" spec/
 grep -r "^C:" spec/
 
 # What governs this path?
-grep -r "~src/path/to/file" spec/
+grep -r "~ src/path/to/file" spec/
 
 # Find by slug
 grep -A 25 "^session-expiry:" spec/

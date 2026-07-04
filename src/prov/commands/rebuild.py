@@ -7,6 +7,7 @@ from prov.indexing import build_edges
 from prov.spec_io import load_backend
 
 
+# spec: rebuild-command, rebuild-from-files, json-cache-backend
 def cmd_rebuild(spec_dir: Path) -> None:
     cache_dir = spec_dir / ".spec"
     cache_dir.mkdir(exist_ok=True)

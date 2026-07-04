@@ -4,6 +4,7 @@ from pathlib import Path
 from prov.spec_io import load_backend
 
 
+# spec: spec-find
 def cmd_find(spec_dir: Path, keywords: str) -> None:
     nodes, _, _, _, _ = load_backend(spec_dir)
     kws = keywords.lower().split()

@@ -152,15 +152,17 @@ _prov_find_cli() {
   PROV_PYTHON=""
   PROV_SCRIPT=""
 
+  # Probe with --version (prov >= 0.2, exit 0) and bare run (prov <= 0.1
+  # exited 0 with no args; the typer CLI exits 2 on some Python versions).
   if command -v prov >/dev/null 2>&1; then
     PROV_CMD=$(command -v prov)
-    if "$PROV_CMD" >/dev/null 2>&1; then
+    if "$PROV_CMD" --version >/dev/null 2>&1 || "$PROV_CMD" >/dev/null 2>&1; then
       PROV_MODE="cmd"
       return 0
     fi
   fi
 
-  if [ -x "$root/.venv/bin/prov" ] && "$root/.venv/bin/prov" >/dev/null 2>&1; then
+  if [ -x "$root/.venv/bin/prov" ] && { "$root/.venv/bin/prov" --version >/dev/null 2>&1 || "$root/.venv/bin/prov" >/dev/null 2>&1; }; then
     PROV_CMD="$root/.venv/bin/prov"
     PROV_MODE="cmd"
     return 0

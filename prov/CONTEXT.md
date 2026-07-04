@@ -18,9 +18,13 @@ C:files-canonical: Markdown files in the spec directory are the spec — the act
 
 > "The markdown files in specs/ are the spec. Not a representation of the spec, not a serialization format."
 
-C:cli-stdlib-only: prov.py requires only Python 3.9+ standard library. No external dependencies.
+C:minimal-deps: The prov CLI keeps runtime dependencies minimal — typer is the only runtime dependency; everything else is Python 3.9+ standard library.
 
-> "Any agent or developer can run it without setup."
+> "Any agent or developer can run it without setup beyond Python."
+
+C:output-compat: Command stdout, stderr, and exit codes are user-facing behavior; refactors keep them byte-identical for existing commands.
+
+> "I've used this for a while and I know it works. So keep the functionality the same."
 
 ## Non-goals
 
@@ -28,9 +32,9 @@ Changelog, design journal, documentation of implementation. Decision rationale p
 
 ## Domain map
 
-core specs/core.md
-format specs/format.md
-storage specs/storage.md
-cli specs/cli.md
-agent specs/agent.md
-install specs/install.md
+core prov/core.md
+format prov/format.md
+storage prov/storage.md
+cli prov/cli.md
+agent prov/agent.md
+install prov/install.md
